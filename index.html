@@ -3,218 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Tech — Experiencia Robótica</title>
+    <title>Smart Tech — Quantum Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background-color: #050508; 
-            font-family: 'Inter', sans-serif; 
-            color: #f1f5f9; 
-            overflow: hidden; /* Bloqueamos el scroll durante la intro */
-        }
+        body { background-color: #050508; color: #f1f5f9; overflow: hidden; font-family: 'Inter', sans-serif; }
 
         /* Capa de Intro */
         #intro-layer {
             position: fixed; inset: 0; z-index: 100;
-            background: #050508;
+            background: radial-gradient(circle at center, #0a0a0f 0%, #050508 100%);
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Rombo Brillante (en lugar del diamante) */
+        /* SUELO CUÁNTICO (Mesh Grid) */
+        .quantum-grid {
+            position: absolute; bottom: -10%; left: -50%; right: -50%; height: 50%;
+            background-image: 
+                linear-gradient(to right, rgba(34, 197, 94, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(34, 197, 94, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+            animation: grid-move 2s linear infinite;
+        }
+
+        @keyframes grid-move {
+            from { background-position: 0 0; }
+            to { background-position: 0 50px; }
+        }
+
+        /* EL ROMBO DE CRISTAL */
         #main-rhombus {
-            width: 140px; height: 140px; /* Tamaño del cuadrado que rota */
-            background: rgba(34, 197, 94, 0.15); /* Fondo ligeramente más opaco */
-            border: 3px solid transparent; /* Borde transparente para que solo el box-shadow brille */
-            transform: rotate(45deg); /* Esto lo convierte en un rombo */
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-            z-index: 101;
-            /* El brillo y los colores se controlan con la animación JS y keyframes */
-            box-shadow: 0 0 30px #4ade80; /* Brillo inicial */
-        }
-
-        /* Contenedor para que el texto SM no rote con el rombo */
-        #sm-text-wrapper {
-            transform: rotate(-45deg); /* Contra-rota para que SM se vea recto */
-            position: absolute;
-        }
-
-        .sm-text {
-            font-family: 'Poppins', sans-serif; font-weight: 900;
-            font-size: 2.2rem; color: #fff; opacity: 0;
-            text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(74, 222, 128, 0.7);
-        }
-
-        /* Estilos del sitio principal */
-        #main-site { opacity: 0; visibility: hidden; }
-        .gradient-text {
-            background: linear-gradient(to right, #4ade80, #3b82f6, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .nav-logo-rhombus { /* Estilo del logo en el nav */
-            width: 32px; height: 32px; /* Más pequeño para el nav */
-            background: rgba(34, 197, 94, 0.2);
-            border: 2px solid #22c55e;
+            width: 160px; height: 160px;
+            background: rgba(34, 197, 94, 0.1);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(74, 222, 128, 0.5);
             transform: rotate(45deg);
             display: flex; align-items: center; justify-content: center;
             position: relative;
+            z-index: 101;
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(34, 197, 94, 0.2);
         }
-        .nav-logo-text {
+
+        /* Resplandor Central */
+        .core-glow {
+            position: absolute; width: 60px; height: 60px;
+            background: #4ade80; filter: blur(40px);
+            border-radius: 50%; opacity: 0.6;
+        }
+
+        #sm-text-wrapper { transform: rotate(-45deg); }
+        .sm-text {
             font-family: 'Poppins', sans-serif; font-weight: 900;
-            font-size: 0.8rem; color: #4ade80;
-            transform: rotate(-45deg); /* Contra-rota el texto */
-            position: absolute;
+            font-size: 2.5rem; color: #fff; opacity: 0;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px #22c55e;
+            letter-spacing: -2px;
+        }
+
+        /* Sitio Web Principal */
+        #main-site { opacity: 0; visibility: hidden; }
+        .gradient-text {
+            background: linear-gradient(to right, #4ade80, #3b82f6, #a855f7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body>
 
+    <audio id="welcome-voice" src="audio/bienvenido_smart_tech.mp3"></audio>
+
     <div id="intro-layer">
+        <div class="quantum-grid"></div>
         <div id="main-rhombus">
+            <div class="core-glow"></div>
             <div id="sm-text-wrapper">
                 <span id="sm-intro-text" class="sm-text">SM</span>
             </div>
         </div>
-        </div>
+    </div>
 
     <main id="main-site">
-        <nav class="p-5 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
+        <nav class="p-6 flex justify-between items-center border-b border-white/5 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
             <div class="flex items-center gap-3">
-                <div id="nav-logo-target" class="nav-logo-rhombus">
-                    <span class="nav-logo-text">SM</span>
+                <div id="logo-nav" class="w-8 h-8 border-2 border-green-500 flex items-center justify-center font-black text-[10px] text-green-400 rotate-45">
+                    <span style="transform: rotate(-45deg)">SM</span>
                 </div>
-                <span class="font-bold text-xl tracking-tighter">Smart Tech</span>
+                <span class="font-bold text-xl">Smart Tech</span>
             </div>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-gray-400">
-                <a href="#" class="hover:text-white transition">Servicios</a>
-                <a href="#" class="hover:text-white transition">Proyectos</a>
-                <a href="#" class="hover:text-white transition text-green-400">Contacto</a>
+            <div class="flex gap-8 text-sm text-gray-400 font-medium">
+                <span class="hover:text-green-400 cursor-pointer transition">Servicios</span>
+                <span class="hover:text-blue-400 cursor-pointer transition">Proyectos</span>
             </div>
         </nav>
 
-        <section class="min-h-screen flex flex-col items-center justify-center px-6 text-center">
-            <h1 id="hero-title" class="text-6xl md:text-8xl font-black mb-6 gradient-text opacity-0">Smart Tech</h1>
-            <p id="hero-sub" class="text-gray-400 text-lg md:text-2xl max-w-2xl mx-auto mb-10 opacity-0">
-                Sistemas inteligentes para negocios reales.
-            </p>
+        <section class="h-[80vh] flex flex-col items-center justify-center text-center px-6">
+            <h1 class="text-7xl md:text-9xl font-black mb-6 gradient-text" id="hero-title">Smart Tech</h1>
+            <p class="text-gray-400 text-xl md:text-2xl max-w-2xl" id="hero-sub">Sistemas inteligentes para negocios reales.</p>
             
-            <div id="features" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full">
-                <div class="p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-green-500/50 transition">
-                    <div class="text-3xl mb-4 text-green-400">📊</div>
-                    <h3 class="font-bold text-xl mb-2">Smart Barber</h3>
-                    <p class="text-sm text-gray-500">Control total de comisiones y turnos.</p>
+            <div id="features" class="grid md:grid-cols-3 gap-6 mt-16 w-full max-w-5xl opacity-0">
+                <div class="p-10 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition">
+                    <h3 class="text-2xl font-bold mb-2">Smart Barber</h3>
+                    <p class="text-gray-500">Gestión de turnos y comisiones.</p>
                 </div>
-                <div class="p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-blue-500/50 transition">
-                    <div class="text-3xl mb-4 text-blue-400">🛡️</div>
-                    <h3 class="font-bold text-xl mb-2">Seguridad</h3>
-                    <p class="text-sm text-gray-500">Infraestructura blindada con Supabase.</p>
+                <div class="p-10 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition">
+                    <h3 class="text-2xl font-bold mb-2">Supabase</h3>
+                    <p class="text-gray-500">Seguridad de nivel bancario.</p>
                 </div>
-                <div class="p-8 bg-white/5 border border-white/10 rounded-3xl hover:border-purple-500/50 transition">
-                    <div class="text-3xl mb-4 text-purple-400">🚀</div>
-                    <h3 class="font-bold text-xl mb-2">Landings</h3>
-                    <p class="text-sm text-gray-500">Diseño optimizado para conversión.</p>
+                <div class="p-10 bg-white/5 border border-white/10 rounded-[2rem] hover:bg-white/10 transition">
+                    <h3 class="text-2xl font-bold mb-2">Web Apps</h3>
+                    <p class="text-gray-500">Optimización de procesos reales.</p>
                 </div>
             </div>
         </section>
     </main>
 
-    <audio id="welcome-audio" src="audio/bienvenido_smart_tech.mp3" preload="auto"></audio>
-
     <script>
         const tl = gsap.timeline();
-        const welcomeAudio = document.getElementById('welcome-audio');
+        const voice = document.getElementById('welcome-voice');
 
-        // Función para animar el brillo del rombo (colores Smart Tech)
-        function animateRhombusGlow() {
-            gsap.to("#main-rhombus", {
-                duration: 4,
-                boxShadow: "0 0 30px #4ade80",
-                ease: "power1.inOut",
-                repeat: -1, yoyo: true
-            });
-            gsap.to("#main-rhombus", {
-                duration: 4,
-                borderColor: "#4ade80", // Este es el color base
-                ease: "power1.inOut",
-                repeat: -1, yoyo: true
-            });
-             // Brillo secundario para un efecto más intenso (como el degradado del texto)
-            gsap.to("#main-rhombus", {
-                boxShadow: "0 0 50px #3b82f6",
-                borderColor: "#3b82f6",
-                duration: 4,
-                ease: "power1.inOut",
-                delay: 1.33, // Aparece después de un tercio de la animación principal
-                repeat: -1, yoyo: true
-            });
-             gsap.to("#main-rhombus", {
-                boxShadow: "0 0 70px #a855f7",
-                borderColor: "#a855f7",
-                duration: 4,
-                ease: "power1.inOut",
-                delay: 2.66, // Aparece después de dos tercios
-                repeat: -1, yoyo: true
-            });
-        }
-
-
-        // INICIO DE LA SECUENCIA
-        tl.call(animateRhombusGlow); // Empezamos el brillo del rombo inmediatamente
-
-        // 1. EL ROMBO APARECE Y GIRA (ahora el div rota, no el clip-path)
-        tl.from("#main-rhombus", { scale: 0, duration: 1, ease: "back.out(1.7)" });
+        // 1. EL ROMBO APARECE Y GIRA SOBRE EL SUELO CUÁNTICO
+        tl.from("#main-rhombus", { scale: 0, duration: 1.2, ease: "expo.out" });
         tl.to("#main-rhombus", { 
-            rotateZ: 720, // Rotación completa en Z para el rombo
-            duration: 2.5, 
-            ease: "power2.inOut" 
+            rotateZ: 405, // 360 + 45 inicial
+            duration: 3, 
+            ease: "power4.inOut" 
         });
 
-        // 2. EL TEXTO SM BRILLA Y SE REPRODUCE EL AUDIO
+        // 2. EL SM BRILLA Y LA VOZ SUENA
         tl.to("#sm-intro-text", { 
             opacity: 1, 
-            scale: 1.2, 
             duration: 0.8, 
-            ease: "elastic.out(1, 0.3)",
-            onComplete: () => {
-                welcomeAudio.play(); // Reproduce el audio al final de la animación SM
+            scale: 1.1,
+            onStart: () => {
+                // Intentamos reproducir la voz (puede requerir click previo en algunos navegadores)
+                voice.play().catch(e => console.log("Esperando interacción para audio"));
             }
-        }, "-=1"); // Sincronizado con el final del giro del rombo
+        }, "-=1.5");
 
-        // 3. EL VUELO: El rombo vuela hacia el logo del nav
-        // Obtenemos la posición final del logo en el nav
-        const navLogo = document.getElementById('nav-logo-target').getBoundingClientRect();
-        // Obtenemos la posición actual del rombo central
-        const mainRhombus = document.getElementById('main-rhombus').getBoundingClientRect();
-
+        // 3. EL VUELO HACIA LA ESQUINA (LOGOTIPO)
         tl.to("#main-rhombus", {
-            x: navLogo.left - mainRhombus.left - (mainRhombus.width / 2) + (navLogo.width / 2),
-            y: navLogo.top - mainRhombus.top - (mainRhombus.height / 2) + (navLogo.height / 2),
-            scale: 0.25, // Achicamos para que encaje en el nav
-            opacity: 0, // Se va a ocultar, pero podemos hacer que parezca que "se une" al logo del nav
-            duration: 1.2,
+            top: "20px",
+            left: "20px",
+            xPercent: -50, yPercent: -50, // Ajuste para el logo
+            scale: 0.2,
+            opacity: 0,
+            duration: 1.5,
             ease: "power3.inOut"
-        }, "+=0.5"); // Un pequeño retraso para que el audio termine o casi termine
+        }, "+=0.5");
 
-        // 4. DESVANECER INTRO Y REVELAR SITIO
-        tl.to("#intro-layer", { opacity: 0, duration: 0.5 }, "-=00.5"); // Empieza un poco antes
+        // 4. REVELAR WEB
+        tl.to("#intro-layer", { opacity: 0, duration: 0.8 });
         tl.set("#intro-layer", { display: "none" });
-        tl.set("body", { overflow: "auto" }); // Devolvemos el scroll
+        tl.set("body", { overflowY: "auto" });
 
-        tl.to("#main-site", { visibility: "visible", opacity: 1, duration: 0.5 }, "-=0.5");
+        tl.to("#main-site", { visibility: "visible", opacity: 1, duration: 1 }, "-=0.5");
+        
+        // 5. ENTRADA DEL CONTENIDO
+        tl.from("#hero-title", { y: 100, opacity: 0, duration: 1.5, ease: "expo.out" }, "-=0.5");
+        tl.from("#hero-sub", { y: 50, opacity: 0, duration: 1.2 }, "-=1");
+        tl.to("#features", { opacity: 1, y: -20, duration: 1 }, "-=0.8");
 
-        // 5. APARICIÓN ESCALONADA DE CONTENIDO
-        tl.to("#hero-title", { opacity: 1, y: 0, duration: 1, ease: "power4.out" }); // Ya no necesita y: -20
-        tl.to("#hero-sub", { opacity: 1, y: 0, duration: 1 }, "-=0.7"); // Ya no necesita y: -20
-        tl.from("#features > div", { 
-            opacity: 0, 
-            y: 50, 
-            stagger: 0.2, 
-            duration: 0.8, 
-            ease: "power2.out" 
-        }, "-=0.5");
     </script>
 </body>
 </html>
