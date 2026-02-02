@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Tech — Ultra Glow Edition</title>
+    <title>Smart Tech — Electric Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
@@ -16,59 +16,51 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* SUELO CUÁNTICO MEJORADO */
+        /* SUELO CUÁNTICO */
         .quantum-grid {
             position: absolute; bottom: -10%; left: -50%; right: -50%; height: 60%;
             background-image: 
-                linear-gradient(to right, rgba(34, 197, 94, 0.25) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(34, 197, 94, 0.25) 1px, transparent 1px);
+                linear-gradient(to right, rgba(34, 197, 94, 0.3) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(34, 197, 94, 0.3) 1px, transparent 1px);
             background-size: 60px 60px;
             transform: perspective(600px) rotateX(65deg);
             mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
-            animation: grid-move 2.5s linear infinite;
+            animation: grid-move 2s linear infinite;
         }
-
         @keyframes grid-move { from { background-position: 0 0; } to { background-position: 0 60px; } }
 
         /* EL ROMBO ULTRA BRILLANTE */
         #main-rhombus {
-            width: 150px; height: 150px;
-            background: rgba(74, 222, 128, 0.15);
-            backdrop-filter: blur(10px);
-            border: 2px solid #4ade80;
+            width: 155px; height: 155px;
+            background: rgba(74, 222, 128, 0.1);
+            backdrop-filter: blur(12px);
+            border: 3px solid #4ade80;
             transform: rotate(45deg);
             display: flex; align-items: center; justify-content: center;
             position: relative;
             z-index: 101;
-            /* Aquí está el secreto del brillo total */
-            box-shadow: 
-                0 0 20px #22c55e,
-                0 0 60px rgba(34, 197, 94, 0.6),
-                inset 0 0 20px #4ade80;
-            filter: drop-shadow(0 0 30px #22c55e);
+            box-shadow: 0 0 40px #22c55e, 0 0 80px rgba(34, 197, 94, 0.4), inset 0 0 30px #4ade80;
         }
 
-        /* Núcleo de energía */
-        .energy-core {
-            position: absolute; width: 80%; height: 80%;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(34, 197, 94, 0) 70%);
-            border-radius: 50%; filter: blur(20px);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.8); opacity: 0.4; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        #sm-text-wrapper { transform: rotate(-45deg); }
-        .sm-text {
+        /* Animación Eléctrica para las letras SM */
+        .electric-flicker {
             font-family: 'Poppins', sans-serif; font-weight: 900;
             font-size: 2.8rem; color: #fff; opacity: 0;
-            text-shadow: 0 0 20px #fff, 0 0 40px #22c55e;
+            animation: flicker 2s linear infinite;
             z-index: 102;
         }
 
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #22c55e, 0 0 80px #22c55e;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+                opacity: 0.5;
+            }
+        }
+
+        #sm-text-wrapper { transform: rotate(-45deg); }
         #main-site { opacity: 0; visibility: hidden; }
     </style>
 </head>
@@ -79,9 +71,8 @@
     <div id="intro-layer">
         <div class="quantum-grid"></div>
         <div id="main-rhombus">
-            <div class="energy-core"></div>
             <div id="sm-text-wrapper">
-                <span id="sm-intro-text" class="sm-text">SM</span>
+                <span id="sm-intro-text" class="electric-flicker">SM</span>
             </div>
         </div>
     </div>
@@ -95,10 +86,9 @@
                 <span class="font-bold text-xl tracking-tighter">Smart Tech</span>
             </div>
         </nav>
-
         <section class="h-screen flex flex-col items-center justify-center text-center">
-            <h1 class="text-7xl font-black mb-4">Smart Tech</h1>
-            <p class="text-gray-400 text-xl">Potenciando tu negocio con IA.</p>
+            <h1 class="text-7xl font-black mb-4 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Smart Tech</h1>
+            <p class="text-gray-400 text-xl">Sistemas inteligentes para negocios reales.</p>
         </section>
     </main>
 
@@ -106,30 +96,36 @@
         const tl = gsap.timeline();
         const voice = document.getElementById('welcome-voice');
 
-        // Secuencia de animación
+        // Secuencia de entrada
         tl.from("#main-rhombus", { scale: 0, duration: 1.5, ease: "back.out(1.7)" });
+        
+        // Giro con aceleración
         tl.to("#main-rhombus", { 
-            rotateZ: 765, // Doble giro + los 45 grados iniciales
-            duration: 3.5, 
+            rotateZ: 1125, // Triple giro + 45 inicial
+            duration: 4, 
             ease: "power4.inOut" 
         });
 
+        // Aparece el SM eléctrico
         tl.to("#sm-intro-text", { 
             opacity: 1, 
-            duration: 1, 
-            onStart: () => voice.play().catch(() => {})
-        }, "-=2");
+            duration: 0.5,
+            onStart: () => {
+                voice.play().catch(() => console.log("Audio requiere interacción"));
+            }
+        }, "-=2.5");
 
-        // El vuelo al logo
+        // El vuelo triunfal a la esquina
         tl.to("#main-rhombus", {
             top: "30px",
             left: "30px",
             scale: 0.15,
             opacity: 0,
             duration: 1.5,
-            ease: "power2.inOut"
-        }, "+=1");
+            ease: "power3.inOut"
+        }, "+=1.5");
 
+        // Reveal del sitio
         tl.to("#intro-layer", { opacity: 0, duration: 1 });
         tl.set("#intro-layer", { display: "none" });
         tl.to("#main-site", { visibility: "visible", opacity: 1, duration: 1 }, "-=0.5");
