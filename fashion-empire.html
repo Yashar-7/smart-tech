@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fashion Empire - Holographic Admin</title>
+    <title>Fashion Empire | Smart Tech OS</title>
     
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,135 +13,164 @@
     
     <style>
         :root { 
-            --imperial: #630d16; --oro: #d4af37; --fondo: #020202; 
-            --neon-blue: #00f2ff; --glass: rgba(20, 20, 20, 0.85);
+            --imperial: #630d16; --oro: #d4af37; --fondo: #050505; 
+            --neon-blue: #00f2ff; --glass: rgba(15, 15, 15, 0.95);
         }
         
         body { 
             background: var(--fondo); color: #fff; margin: 0; 
-            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif; min-height: 100vh;
         }
 
-        /* --- ESCÁNER LÁSER (CAPA SUPERIOR) --- */
-        #scanner-line {
-            position: fixed; width: 100%; height: 4px;
-            background: linear-gradient(to right, transparent, var(--neon-blue), transparent);
-            box-shadow: 0 0 20px var(--neon-blue);
-            z-index: 10000; top: -10px; pointer-events: none; opacity: 0;
+        /* --- LÁSER DE ESCANEO (VISIBLE AL GUARDAR) --- */
+        #scanner-bar {
+            position: fixed; left: 0; width: 100%; height: 2px;
+            background: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
+            z-index: 10002; top: -10px; pointer-events: none;
         }
 
-        /* --- INTRO: CORTINAS TEATRALES --- */
+        /* --- CAPA DE INTRO (CORTINAS) --- */
         #intro-stage {
-            position: fixed; inset: 0; z-index: 9999; display: flex;
+            position: fixed; inset: 0; z-index: 9999; display: flex; cursor: pointer;
         }
         .curtain {
-            flex: 1; height: 100%; background: var(--imperial);
-            box-shadow: inset 0 0 100px #000; border-bottom: 2px solid var(--oro);
+            flex: 1; height: 100%; background: linear-gradient(to bottom, #4a0a10, var(--imperial));
+            box-shadow: inset 0 0 100px #000; display: flex; align-items: center;
+        }
+        .left-c { justify-content: flex-end; border-right: 1px solid var(--oro); }
+        .right-c { justify-content: flex-start; border-left: 1px solid var(--oro); }
+
+        #click-prompt {
+            position: absolute; width: 100%; text-align: center; top: 70%;
+            font-family: 'Orbitron'; font-size: 0.7rem; color: var(--oro);
+            letter-spacing: 5px; animation: blink 2s infinite;
         }
 
-        /* --- MAIN LAYOUT --- */
+        /* --- CONTENEDOR PRINCIPAL (EL ADMIN) --- */
         #admin-hub {
-            opacity: 0; padding: 30px; display: grid;
-            grid-template-columns: 450px 1fr; gap: 30px;
+            position: relative; z-index: 1; padding: 20px;
+            max-width: 1400px; margin: auto; display: grid;
+            grid-template-columns: 420px 1fr; gap: 25px;
+            visibility: hidden; /* Se activa con GSAP */
         }
 
-        /* --- CÁMARA DE ESCANEO (NUEVO FORMULARIO) --- */
         .scanner-chamber {
-            background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.2);
+            background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 20px; padding: 30px; position: relative;
-            backdrop-filter: blur(15px); box-shadow: 0 0 40px rgba(0,0,0,1);
-        }
-        .scanner-chamber::before {
-            content: "SCANNER ACTIVE"; position: absolute; top: 10px; right: 20px;
-            font-family: 'Orbitron'; font-size: 0.6rem; color: var(--neon-blue);
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
         .hologram-input {
-            background: rgba(255,255,255,0.03); border: none;
-            border-bottom: 1px solid #333; color: white; padding: 15px;
-            margin-bottom: 15px; width: 100%; box-sizing: border-box;
-            font-family: 'Orbitron'; font-size: 0.8rem; transition: 0.3s;
+            background: #111; border: 1px solid #333; color: white;
+            padding: 12px; margin-bottom: 12px; width: 100%; box-sizing: border-box;
+            font-family: 'Orbitron'; font-size: 0.8rem; border-radius: 5px;
         }
-        .hologram-input:focus { border-bottom: 1px solid var(--neon-blue); background: rgba(0, 242, 255, 0.05); outline: none; }
-
-        /* --- TABLA DE INVENTARIO 8K --- */
-        .inventory-panel {
-            background: var(--glass); border-radius: 20px; padding: 25px;
-            border-top: 2px solid var(--oro);
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.7rem; text-align: left; padding: 15px; border-bottom: 1px solid #222; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; }
+        .hologram-input:focus { border-color: var(--neon-blue); outline: none; }
 
         .btn-scan {
-            background: transparent; border: 1px solid var(--oro); color: var(--oro);
-            padding: 20px; width: 100%; cursor: pointer; font-family: 'Orbitron';
-            font-weight: bold; letter-spacing: 3px; transition: 0.5s; position: relative;
-            overflow: hidden;
+            background: var(--imperial); border: 1px solid var(--oro); color: #fff;
+            padding: 18px; width: 100%; cursor: pointer; font-family: 'Orbitron';
+            font-weight: bold; letter-spacing: 2px; transition: 0.3s;
         }
-        .btn-scan:hover { background: var(--oro); color: black; box-shadow: 0 0 30px var(--oro); }
+        .btn-scan:hover { background: var(--oro); color: #000; box-shadow: 0 0 20px var(--oro); }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .inventory-panel {
+            background: var(--glass); border-radius: 20px; padding: 25px;
+            border-top: 3px solid var(--oro); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.7rem; padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         @media (max-width: 1000px) { #admin-hub { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body onclick="iniciarSistema()">
+<body onclick="abrirEmpire()">
 
-    <div id="scanner-line"></div>
+    <div id="scanner-bar"></div>
 
     <div id="intro-stage">
-        <div class="curtain left-c"></div>
-        <div class="curtain right-c"></div>
-        <h1 id="logo-f" style="position:absolute; width:100%; text-align:center; top:45%; font-family:'Playfair Display'; color:var(--oro); font-size:3rem; z-index:10001; opacity:0">FASHION EMPIRE</h1>
+        <div class="curtain left-c">
+            <h1 style="font-family:'Playfair Display'; color:var(--oro); margin-right:-100px; font-size: 3rem; white-space:nowrap">FASHION</h1>
+        </div>
+        <div class="curtain right-c">
+            <h1 style="font-family:'Playfair Display'; color:var(--oro); margin-left:-100px; font-size: 3rem; white-space:nowrap">EMPIRE</h1>
+        </div>
+        <div id="click-prompt">SISTEMA SMART TECH - CLICK PARA INICIAR</div>
     </div>
 
     <div id="admin-hub">
-        <div class="scanner-chamber">
-            <h2 style="font-family:'Playfair Display'; color:var(--oro); margin-bottom:30px">DESIGN SCANNER</h2>
-            <input type="text" id="nom" class="hologram-input" placeholder="DESIGN NAME">
-            <div style="display:flex; gap:10px">
-                <input type="text" id="talle" class="hologram-input" placeholder="SIZE">
-                <input type="text" id="color" class="hologram-input" placeholder="COLOR">
-            </div>
-            <div style="display:flex; gap:10px">
-                <input type="number" id="cos" class="hologram-input" placeholder="COST $">
-                <input type="number" id="pre" class="hologram-input" placeholder="PVP $">
-            </div>
-            <input type="number" id="sto" class="hologram-input" placeholder="QUANTITY">
-            <input type="text" id="cod" class="hologram-input" placeholder="UNIQUE CODE (SKU)">
-            
-            <button class="btn-scan" onclick="ejecutarEscaneo()">ENGAGE SYSTEM SCAN</button>
-            
-            <div id="scan-status" style="margin-top:20px; font-family:'Orbitron'; font-size:0.6rem; color:#555">READY FOR INPUT...</div>
-        </div>
+        <aside>
+            <div class="scanner-chamber">
+                <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue); margin-bottom:10px">SCANNER MODULE V2.0</div>
+                <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 25px 0">REGISTRO DE DISEÑO</h2>
+                
+                <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">NOMBRE DE PRENDA</label>
+                <input type="text" id="nom" class="hologram-input" placeholder="...">
+                
+                <div style="display:flex; gap:10px">
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">TALLE</label>
+                        <input type="text" id="talle" class="hologram-input">
+                    </div>
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">COLOR</label>
+                        <input type="text" id="color" class="hologram-input">
+                    </div>
+                </div>
 
-        <div>
-            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-bottom:20px">
+                <div style="display:flex; gap:10px">
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">COSTO $</label>
+                        <input type="number" id="cos" class="hologram-input">
+                    </div>
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">PVP $</label>
+                        <input type="number" id="pre" class="hologram-input">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:15px">
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">STOCK</label>
+                        <input type="number" id="sto" class="hologram-input">
+                    </div>
+                    <div style="flex:1">
+                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">SKU</label>
+                        <input type="text" id="cod" class="hologram-input">
+                    </div>
+                </div>
+
+                <button class="btn-scan" onclick="guardarConEscaneo()">EJECUTAR ESCÁNER</button>
+            </div>
+        </aside>
+
+        <main>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:25px">
                 <div class="inventory-panel" style="text-align:center">
-                    <label style="font-family:'Orbitron'; font-size:0.6rem; color:var(--oro)">CAPITAL INVESTED</label>
-                    <div id="capInvertido" style="font-size:1.5rem; font-weight:bold">$0</div>
+                    <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--oro)">CAPITAL EN STOCK</div>
+                    <div id="capInvertido" style="font-size:1.8rem; font-weight:bold">$0</div>
                 </div>
                 <div class="inventory-panel" style="text-align:center; border-top-color:var(--neon-blue)">
-                    <label style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue)">SYSTEM STATUS</label>
-                    <div style="font-size:1.5rem; font-weight:bold; color:var(--neon-blue)">ONLINE</div>
-                </div>
-                <div class="inventory-panel" style="text-align:center; border-top-color:#2ecc71">
-                    <label style="font-family:'Orbitron'; font-size:0.6rem; color:#2ecc71">SALES TODAY</label>
-                    <div id="ventasDia" style="font-size:1.5rem; font-weight:bold">$0</div>
+                    <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue)">VENTAS DEL DÍA</div>
+                    <div id="ventasDia" style="font-size:1.8rem; font-weight:bold">$0</div>
                 </div>
             </div>
 
             <div class="inventory-panel">
-                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin-top:0">LIVE INVENTORY</h3>
-                <div style="max-height:500px; overflow-y:auto">
-                    <table id="tablaInv">
-                        <thead><tr><th>PRODUCT</th><th>STOCK</th><th>PRICE</th></tr></thead>
+                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0">INVENTARIO REAL-TIME</h3>
+                <div style="max-height:600px; overflow-y:auto">
+                    <table>
+                        <thead>
+                            <tr><th>ARTÍCULO</th><th style="text-align:center">STOCK</th><th style="text-align:right">PRECIO</th></tr>
+                        </thead>
                         <tbody id="cuerpoTabla"></tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
 <script>
@@ -149,78 +178,72 @@
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2cHVycHZiaXVqaGNiaXVncmtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NDgzMTUsImV4cCI6MjA4MzMyNDMxNX0.AivKJ0_N0z_4T4vLNfUcE2hepJ1XXOO8-4fSA3PJXdc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-    let sistemaActivo = false;
+    let sistemaAbierto = false;
 
-    function iniciarSistema() {
-        if(sistemaActivo) return;
-        sistemaActivo = true;
+    function abrirEmpire() {
+        if(sistemaAbierto) return;
+        sistemaAbierto = true;
 
         const tl = gsap.timeline();
-        tl.to("#logo-f", { opacity: 1, duration: 1, letterSpacing: "20px" })
-          .to(".left-c", { x: "-100%", duration: 2, ease: "power4.inOut" }, "+=0.5")
-          .to(".right-c", { x: "100%", duration: 2, ease: "power4.inOut" }, "-=2")
-          .to("#logo-f", { opacity: 0, scale: 0.8, duration: 1 }, "-=1.5")
-          .to("#admin-hub", { opacity: 1, duration: 1 })
+        tl.to(".left-c", { x: "-100%", duration: 2.5, ease: "power4.inOut" })
+          .to(".right-c", { x: "100%", duration: 2.5, ease: "power4.inOut" }, "-=2.5")
+          .to("#click-prompt", { opacity: 0, duration: 0.5 }, "-=2.5")
+          .set("#admin-hub", { visibility: "visible" })
+          .from("#admin-hub", { opacity: 0, y: 50, duration: 1.5 }, "-=1")
           .set("#intro-stage", { display: "none" });
 
         cargarInventario();
     }
 
-    async function ejecutarEscaneo() {
-        const status = document.getElementById('scan-status');
-        status.innerText = "INITIALIZING LASER SCAN...";
-        status.style.color = var(--neon-blue);
+    async function guardarConEscaneo() {
+        const nom = document.getElementById('nom').value;
+        if(!nom) return Swal.fire('Error', 'Ingresa el nombre del diseño', 'warning');
 
-        // EFECTO VISUAL DE ESCÁNER
+        // EFECTO DE ESCÁNER LÁSER
         const tl = gsap.timeline();
-        tl.set("#scanner-line", { opacity: 1, top: "0%" })
-          .to("#scanner-line", { top: "100%", duration: 1.5, ease: "none" })
-          .to("#scanner-line", { opacity: 0, duration: 0.3 });
+        tl.fromTo("#scanner-bar", { top: "-2%" }, { top: "100%", duration: 1.2, ease: "none" })
+          .set("#scanner-bar", { top: "-2%" });
 
-        // Guardado Real en Supabase
         const datos = {
-            nombre: document.getElementById('nom').value,
+            nombre: nom,
             talle: document.getElementById('talle').value,
             color: document.getElementById('color').value,
             precio_costo: parseFloat(document.getElementById('cos').value) || 0,
             precio_venta: parseFloat(document.getElementById('pre').value) || 0,
             stock: parseInt(document.getElementById('sto').value) || 0,
-            codigo_barras: document.getElementById('cod').value || "SKU-" + Date.now()
+            codigo_barras: document.getElementById('cod').value || "EM-" + Date.now()
         };
-
-        if(!datos.nombre) return Swal.fire('Error', 'Design name required', 'error');
 
         const { error } = await _supabase.from('productos_boutique').upsert(datos);
         
         if(!error) {
-            status.innerText = "SCAN COMPLETE. DATA UPLOADED.";
-            cargarInventario();
             Swal.fire({
-                title: 'DATABASE SYNC',
-                text: 'Holographic record updated',
+                title: 'ESCÁNER COMPLETADO',
+                text: 'Prenda sincronizada con Fashion Empire DB',
                 icon: 'success',
-                background: '#050505',
-                color: var(--oro),
-                confirmButtonColor: var(--imperial)
+                background: '#0a0a0a',
+                color: '#d4af37',
+                confirmButtonColor: '#630d16'
             });
+            cargarInventario();
         }
     }
 
     async function cargarInventario() {
         const { data } = await _supabase.from('productos_boutique').select('*').order('created_at', { ascending: false });
         const tbody = document.getElementById('cuerpoTabla');
-        let cap = 0;
+        let totalCap = 0;
         
         tbody.innerHTML = data.map(p => {
-            cap += (p.precio_costo * p.stock);
+            totalCap += (p.precio_costo * p.stock);
             return `<tr>
-                <td><b style="color:var(--oro)">${p.nombre}</b><br><small>${p.talle} | ${p.color}</small></td>
-                <td><span style="color:${p.stock <= 2 ? 'red' : '#2ecc71'}">${p.stock}</span></td>
-                <td>$${p.precio_venta.toLocaleString()}</td>
+                <td><b style="color:var(--oro)">${p.nombre}</b><br><small style="color:#777">${p.talle} | ${p.color}</small></td>
+                <td style="text-align:center"><span style="color:${p.stock <= 2 ? '#ff4444' : '#2ecc71'}; font-weight:bold">${p.stock}</span></td>
+                <td style="text-align:right; font-weight:bold">$${p.precio_venta.toLocaleString()}</td>
             </tr>`;
         }).join('');
         
-        document.getElementById('capInvertido').innerText = `$${cap.toLocaleString()}`;
+        document.getElementById('capInvertido').innerText = `$${totalCap.toLocaleString()}`;
     }
 </script>
 </body>
