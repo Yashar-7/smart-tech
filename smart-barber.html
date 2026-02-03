@@ -18,30 +18,37 @@
             color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- PERSIANA ULTRA-REALISTA --- */
+        /* --- PERSIANA ULTRA-REALISTA V2 --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
-            background: #050505; display: flex; align-items: center; justify-content: center;
+            background: #000; display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
 
         .shutter {
             position: absolute; inset: 0;
-            /* Textura de Acero Galvanizado y Corrugado */
+            /* Contraste mejorado para simular relieve 3D profundo */
             background: 
-                linear-gradient(90deg, #111 0%, #333 5%, #1a1a1a 10%, #3a3a3a 15%, #1a1a1a 20%, #444 25%, #111 30%, #333 35%, #1a1a1a 50%, #111 70%, #3a3a3a 85%, #111 100%),
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.7) 0px, rgba(0,0,0,0.2) 2px, transparent 4px, rgba(255,255,255,0.03) 38px, rgba(0,0,0,0.9) 40px);
+                linear-gradient(90deg, 
+                    #0a0a0a 0%, #2a2a2a 5%, #0f0f0f 12%, #333 20%, 
+                    #111 35%, #444 50%, #111 65%, #333 80%, #0a0a0a 100%),
+                repeating-linear-gradient(0deg, 
+                    rgba(0,0,0,0.85) 0px, 
+                    rgba(0,0,0,0.4) 2px, 
+                    transparent 4px, 
+                    rgba(255,255,255,0.05) 36px, 
+                    rgba(0,0,0,0.9) 40px);
             background-blend-mode: overlay;
-            border-bottom: 20px solid #111;
-            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
+            border-bottom: 25px solid #000;
+            box-shadow: inset 0 0 100px rgba(0,0,0,1), inset 0 0 200px rgba(0,0,0,0.8);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: filter 0.1s ease; /* Para el efecto de luz del neón */
         }
 
-        /* Ruido Industrial (Grunge) */
         .shutter::before {
             content: ""; position: absolute; inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.12; pointer-events: none;
+            opacity: 0.15; pointer-events: none;
         }
 
         .graffiti {
@@ -50,18 +57,18 @@
             transform: rotate(-8deg); pointer-events: none; white-space: nowrap; text-transform: uppercase;
         }
 
-        /* Neón de Élite con 8 capas de brillo */
+        /* Neón de Élite con brillo ultra-intenso */
         .neon-text {
-            font-size: 3.5rem; font-weight: bold; color: #fff;
-            margin-top: 20px; font-family: 'Arial Black', sans-serif;
+            font-size: 4rem; font-weight: 900; color: #fff;
+            margin-top: 25px; font-family: 'Arial Black', sans-serif;
             opacity: 0;
             text-shadow: 
-                0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-blue), 
-                0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue), 
-                0 0 90px var(--neon-blue), 0 0 120px var(--neon-blue);
+                0 0 10px #fff, 0 0 20px #fff, 0 0 40px var(--neon-blue), 
+                0 0 80px var(--neon-blue), 0 0 120px var(--neon-blue), 
+                0 0 200px var(--neon-blue);
+            filter: brightness(1.2);
         }
 
-        /* Sistema de Chispas */
         .spark {
             position: absolute; width: 3px; height: 3px; background: white;
             border-radius: 50%; pointer-events: none; z-index: 10000;
@@ -69,9 +76,9 @@
         }
 
         .pole-container {
-            width: 65px; height: 170px; background: #fff; border: 6px solid #111;
+            width: 70px; height: 180px; background: #fff; border: 8px solid #000;
             border-radius: 50px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
         }
         .stripes {
             width: 100%; height: 400px;
@@ -110,7 +117,7 @@
             <div id="pole-wrapper" style="z-index: 10; text-align: center;">
                 <div class="pole-container" style="margin: 0 auto;"><div class="stripes"></div></div>
                 <div class="neon-text" id="neon-logo">SMART BARBER</div>
-                <p id="status-text" style="color: #444; font-family: monospace; margin-top: 10px; font-size: 0.7rem; letter-spacing: 2px;">INICIANDO HARDWARE...</p>
+                <p id="status-text" style="color: #444; font-family: monospace; margin-top: 15px; font-size: 0.7rem; letter-spacing: 3px;">CONECTANDO HARDWARE...</p>
             </div>
         </div>
     </div>
@@ -150,34 +157,42 @@
     </div>
 
 <script>
-    // --- EFECTO DE CHISPAS ---
     function createSpark() {
         const shutter = document.getElementById('shutter-container');
         const spark = document.createElement('div');
         spark.className = 'spark';
         const x = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
-        const y = window.innerHeight / 2 + 50;
+        const y = window.innerHeight / 2 + 60;
         spark.style.left = x + 'px';
         spark.style.top = y + 'px';
         shutter.appendChild(spark);
         gsap.to(spark, {
-            x: (Math.random() - 0.5) * 100, y: Math.random() * 100,
-            opacity: 0, duration: 0.4, onComplete: () => spark.remove()
+            x: (Math.random() - 0.5) * 150, y: Math.random() * 150,
+            opacity: 0, duration: 0.5, onComplete: () => spark.remove()
         });
     }
 
-    // --- ANIMACIÓN DE ENTRADA ÉPICA ---
+    // --- ANIMACIÓN DE ENTRADA CON LUZ DINÁMICA ---
     window.addEventListener('load', () => {
         const tl = gsap.timeline();
+        
         tl.to("#neon-logo", { 
-            opacity: 1, duration: 0.05, repeat: 10, yoyo: true, 
-            onRepeat: () => { if(Math.random() > 0.5) createSpark(); } 
-        }, "+=0.5")
+            opacity: 1, duration: 0.05, repeat: 14, yoyo: true, 
+            onRepeat: () => { 
+                if(Math.random() > 0.4) {
+                    createSpark();
+                    gsap.set("#shutter", { filter: "brightness(1.4) contrast(1.1)" });
+                } else {
+                    gsap.set("#shutter", { filter: "brightness(1) contrast(1)" });
+                }
+            } 
+        }, "+=0.8")
+          .to("#shutter", { filter: "brightness(1.1)", duration: 0.2 })
           .to("#neon-logo", { opacity: 1, duration: 0.5 })
           .to("#status-text", { textContent: "SISTEMA ONLINE", color: "#00f2ff", duration: 0.1 })
-          .to("#shutter", { y: 10, duration: 0.1, repeat: 5, yoyo: true }) // Vibración motor
-          .to("#shutter", { y: "-100%", duration: 2.5, ease: "expo.inOut" })
-          .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1.5")
+          .to("#shutter", { x: 4, duration: 0.05, repeat: 12, yoyo: true }) // Vibración fuerte
+          .to("#shutter", { y: "-100%", duration: 2.8, ease: "power4.inOut" })
+          .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1.8")
           .set("#shutter-container", { display: "none" });
     });
 
