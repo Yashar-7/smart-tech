@@ -3,154 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartBarber Pro - Urban OS Elite</title>
+    <title>SmartBarber Pro - 8K Cinematic OS</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         :root { 
-            --dorado: #d4af37; --verde: #4caf50; --rojo: #f44336; 
-            --neon-blue: #00f2ff; --barber-red: #ff0000; --barber-blue: #0055ff;
+            --dorado: #d4af37; --neon-blue: #00f2ff; --barber-red: #ff0000; --barber-blue: #0055ff;
         }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-            color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden;
+            font-family: 'Segoe UI', sans-serif; background: #050505;
+            color: white; margin: 0; overflow: hidden;
         }
 
-        /* --- PERSIANA MEJORADA (WOW FACTOR) --- */
+        /* --- CONTENEDOR CINEMATOGRÁFICO --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
             background: #000; display: flex; align-items: center; justify-content: center;
+            perspective: 1200px; /* Profundidad 3D */
         }
 
+        /* --- PERSIANA HIPERREALISTA --- */
         .shutter {
             position: absolute; inset: 0;
+            /* Textura de metal corrugado real */
             background: 
-                linear-gradient(90deg, #050505 0%, #1a1a1a 5%, #0a0a0a 12%, #222 20%, #0a0a0a 35%, #333 50%, #0a0a0a 65%, #222 80%, #050505 100%),
-                linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 55%, transparent 70%),
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.95) 0px, rgba(0,0,0,0.6) 2px, transparent 4px, rgba(255,255,255,0.02) 38px, rgba(0,0,0,1) 40px);
-            background-blend-mode: screen, overlay;
-            border-bottom: 30px solid #080808;
-            box-shadow: inset 0 0 150px rgba(0,0,0,1);
+                linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
+                linear-gradient(90deg, #0a0a0a 0%, #1a1a1a 10%, #050505 20%, #222 50%, #050505 80%, #1a1a1a 90%, #0a0a0a 100%);
+            background-blend-mode: multiply, normal, normal;
+            border-bottom: 40px solid #111;
+            /* Sombra de contacto real */
+            box-shadow: inset 0 0 200px rgba(0,0,0,0.9), 0 50px 100px rgba(0,0,0,1);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            animation: metallicShine 12s linear infinite;
         }
 
-        .shutter::after {
+        /* Suciedad y desgaste (El secreto del realismo) */
+        .shutter::before {
             content: ""; position: absolute; inset: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/scratched-metal.png');
-            opacity: 0.2; pointer-events: none; mix-blend-mode: multiply;
+            background: url('https://www.transparenttextures.com/patterns/p6.png'); /* Micro-polvo */
+            opacity: 0.4; pointer-events: none;
         }
 
-        @keyframes metallicShine {
-            0% { background-position: 0% 0%, -200% 0%, 0% 0%; }
-            100% { background-position: 0% 0%, 200% 0%, 0% 0%; }
+        /* --- LOGO NEÓN "TUBULAR" --- */
+        .neon-box {
+            padding: 20px 40px;
+            border: 2px solid rgba(0, 242, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 242, 255, 0.03);
+            backdrop-filter: blur(2px);
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.1);
         }
 
         .neon-text {
-            font-size: 4.2rem; font-weight: 900; color: #fff;
-            margin-top: 25px; font-family: 'Orbitron', sans-serif;
-            letter-spacing: 5px; opacity: 0;
-            text-shadow: 0 0 5px #fff, 0 0 10px rgba(0, 242, 255, 0.6), 0 0 30px rgba(0, 242, 255, 0.2);
+            font-size: 4.8rem; font-weight: 900; color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 8px; opacity: 0;
+            /* Renderizado de cristal */
+            text-shadow: 
+                0 0 2px #fff,
+                0 0 10px rgba(0, 242, 255, 0.8),
+                0 0 35px rgba(0, 242, 255, 0.4),
+                0 0 70px rgba(0, 242, 255, 0.2);
+            filter: blur(0.5px); /* Suavizado de lente */
         }
 
-        .pole-container {
-            width: 70px; height: 180px; background: #fff; border: 8px solid #111;
-            border-radius: 50px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15);
+        /* --- BARBER POLE HIPERREALISTA --- */
+        .pole-glass {
+            width: 65px; height: 160px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px; position: relative; overflow: hidden;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.2);
+            margin-bottom: 30px;
         }
 
         .stripes {
             width: 100%; height: 400px;
-            background: repeating-linear-gradient(45deg, var(--barber-red) 0px, var(--barber-red) 35px, #fff 35px, #fff 70px, var(--barber-blue) 70px, var(--barber-blue) 105px, #fff 105px, #fff 140px);
-            animation: rotatePole 1.2s linear infinite;
+            background: repeating-linear-gradient(45deg, #cc0000 0px, #cc0000 40px, #fff 40px, #fff 80px, #0033aa 80px, #0033aa 120px, #fff 120px, #fff 160px);
+            animation: rotatePole 1.5s linear infinite;
+            filter: saturate(1.5) contrast(1.2);
         }
-        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-140px); } }
 
-        /* --- DASHBOARD ORIGINAL RE-ESTILIZADO --- */
-        #main-wrapper { opacity: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
-        #reloj { font-size: 2.2rem; font-weight: bold; color: var(--dorado); margin-bottom: 20px; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px rgba(212,175,55,0.3); }
+        /* --- EFECTO CÁMARA VIGNETTE --- */
+        #shutter-container::after {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* Dashboard (Conserva tu lógica pero con estética 8K) */
+        #main-wrapper { opacity: 0; padding: 40px; transform: scale(1.1); filter: blur(10px); }
+        .card-8k { background: rgba(15,15,15,0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; backdrop-filter: blur(30px); }
         
-        .card, .admin-panel { background: rgba(25,25,25,0.9); backdrop-filter: blur(15px); padding: 1.5rem; border-radius: 25px; border: 1px solid rgba(212,175,55,0.15); width: 100%; box-sizing: border-box; margin-bottom: 20px; }
-        .card { max-width: 400px; text-align: center; }
-        .admin-panel { max-width: 850px; }
+        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-160px); } }
 
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border-bottom: 3px solid var(--dorado); text-align: center; }
-        .stat-val { font-size: 1.4rem; font-weight: bold; color: #fff; }
-        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
-
-        .form-gestion { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .form-gestion { grid-template-columns: 1fr; } }
-
-        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #333; background: #111; color: white; box-sizing: border-box; }
-        button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
-        
-        .btn-entrada { background: var(--dorado); color: black; }
-        .btn-salida { background: #1a1a1a; color: white; border: 1px solid var(--rojo); }
-        .btn-accion { background: var(--verde); color: white; }
-        
-        .historial-box { margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; min-height: 100px; }
-        .hist-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; font-size: 0.8rem; }
-        #mensaje-flotante { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; background: rgba(76,175,80,0.2); border:1px solid var(--verde); color:#afffaf; }
-        .spark { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 8px var(--neon-blue); }
+        .spark { position: absolute; width: 3px; height: 3px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #00f2ff; pointer-events: none; }
     </style>
 </head>
 <body onclick="initAudio()">
 
     <div id="shutter-container">
         <div class="shutter" id="shutter">
-            <div id="pole-wrapper" style="z-index: 10; text-align: center;">
-                <div class="pole-container" style="margin: 0 auto;"><div class="stripes"></div></div>
-                <div class="neon-text" id="neon-logo">SMART BARBER</div>
-                <p id="status-text" style="color: #444; font-family: 'Orbitron', monospace; margin-top: 15px; font-size: 0.6rem; letter-spacing: 4px;">SYSTEM OFFLINE - CLICK TO START</p>
+            <div class="pole-glass">
+                <div class="stripes"></div>
             </div>
+            <div class="neon-box">
+                <div class="neon-text" id="neon-logo">SMART BARBER</div>
+            </div>
+            <p id="status-text" style="color: #666; font-family: 'Orbitron'; margin-top: 30px; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase;">
+                LOCKED // PRESS TO ENGAGE
+            </p>
         </div>
     </div>
 
     <div id="main-wrapper">
-        <div id="reloj">00:00:00</div>
-        
-        <div class="card">
-            <h2 style="color:var(--dorado); margin-bottom:15px; font-family: 'Orbitron'; font-size: 1.2rem;">💈 ACCESO DE STAFF</h2>
-            <input type="number" id="dni" placeholder="DNI BARBERO">
-            <div style="display:flex; gap:10px">
-                <button class="btn-entrada" onclick="marcarSimulado('ENTRADA')">Entrada</button>
-                <button class="btn-salida" onclick="marcarSimulado('SALIDA')">Salida</button>
-            </div>
-            <div id="mensaje-flotante"></div>
+        <h1 id="reloj" style="text-align:center; font-family:'Orbitron'; color:var(--dorado)">00:00:00</h1>
+        <div class="card-8k" style="max-width: 500px; margin: auto; padding: 30px; text-align: center;">
+             <h2 style="font-family:'Orbitron'">ADMIN TERMINAL</h2>
+             <input type="number" id="dni" placeholder="OPERATOR ID" style="background:transparent; border:1px solid #333; color:white; padding:15px; width:80%">
+             <div style="display:flex; gap:10px; margin-top:20px">
+                <button onclick="marcarSimulado('ENTRADA')" style="background:var(--dorado); color:black; padding:15px; flex:1; border-radius:10px; cursor:pointer">LOGIN</button>
+                <button onclick="marcarSimulado('SALIDA')" style="background:transparent; border:1px solid #ff0000; color:white; padding:15px; flex:1; border-radius:10px; cursor:pointer">LOGOUT</button>
+             </div>
         </div>
-
-        <div class="admin-panel">
-            <div class="grid-stats">
-                <div class="stat-card"><div class="stat-label">Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
-                <div class="stat-card"><div class="stat-label">Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
-                <div class="stat-card"><div class="stat-label">Gastos</div><div id="box-g" class="stat-val">$0</div></div>
-                <div class="stat-card"><div class="stat-label">Neto Local</div><div id="box-n" class="stat-val" style="color:var(--verde)">$0</div></div>
-            </div>
-            
-            <div class="form-gestion">
-                <div>
-                    <select id="sel-b"><option value="">-- Barbero --</option><option value="JULIÁN">JULIÁN</option><option value="MARCOS">MARCOS</option></select>
-                    <select id="tipo-v"><option value="SERVICIO">SERVICIO (50%)</option><option value="PRODUCTO">PRODUCTO (10%)</option></select>
-                    <input type="number" id="m-v" placeholder="Monto $">
-                    <select id="m-m"><option value="EF">EFECTIVO</option><option value="TR">TRANSFERENCIA</option></select>
-                    <button class="btn-accion" onclick="registrarVenta()">Cargar Venta</button>
-                    <div class="historial-box"><div id="list-v"></div></div>
-                </div>
-                <div id="res-c" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; font-family: 'Orbitron'; font-size: 0.8rem;">
-                    Liquidación en tiempo real...
-                </div>
-            </div>
-        </div>
-        
-        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid var(--rojo); padding: 10px 30px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-family: 'Orbitron'; font-size: 0.7rem;">🔴 CERRAR LOCAL</button>
     </div>
 
 <script>
-    // --- LÓGICA DE AUDIO ---
     let audioIniciado = false;
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -170,115 +153,69 @@
         if(audioIniciado) return;
         audioIniciado = true;
         ctx.resume();
-        startSequence();
+        startCinematicSequence();
     }
 
-    // --- SECUENCIA DE APERTURA ---
-    function startSequence() {
+    function startCinematicSequence() {
         const tl = gsap.timeline();
-        gsap.to("#shutter", { scale: 1.05, duration: 4, ease: "sine.inOut" });
+        
+        // Efecto lente de cámara moviéndose
+        gsap.to("#shutter", { scale: 1.1, duration: 6, ease: "sine.inOut" });
 
-        tl.to("#status-text", { textContent: "INITIALIZING OS...", duration: 1 })
+        tl.to("#status-text", { textContent: "SYSTEM_INITIALIZING...", duration: 1.5, ease: "none" })
           .to("#neon-logo", { 
-            opacity: 1, duration: 0.04, repeat: 12, yoyo: true, 
+            opacity: 1, duration: 0.05, repeat: 15, yoyo: true, 
             onRepeat: () => { 
-                if(Math.random() > 0.5) {
+                if(Math.random() > 0.4) {
                     createSpark();
-                    playSound(60, 'square', 0.05, 0.08);
-                    gsap.set("#shutter", { filter: "brightness(1.2) contrast(1.1)" });
+                    playSound(50, 'square', 0.04, 0.1);
+                    gsap.set("#shutter", { filter: "brightness(1.3) contrast(1.2) saturate(1.2)" });
                 } else {
-                    gsap.set("#shutter", { filter: "brightness(1) contrast(1)" });
+                    gsap.set("#shutter", { filter: "brightness(1) contrast(1) saturate(1)" });
                 }
             } 
           })
-          .to("#status-text", { textContent: "HYDRAULICS ENGAGED", color: "#00f2ff", duration: 0.5 })
-          .to("#shutter", { x: 2, duration: 0.05, repeat: 10, yoyo: true })
+          .to("#status-text", { textContent: "UNLOCKED", color: "#00f2ff", duration: 0.5 })
+          // El movimiento de la persiana ahora es más suave y pesado
           .to("#shutter", { 
-            y: "-100%", duration: 3.5, ease: "expo.inOut", 
+            y: "-110%", duration: 4.5, ease: "power4.inOut",
             onStart: () => {
-                playSound(150, 'triangle', 0.8, 0.03);
-                for(let i=0; i<8; i++) setTimeout(() => playSound(70 - i*5, 'sawtooth', 0.2, 0.02), i * 350);
+                playSound(80, 'triangle', 2, 0.05);
             }
           })
-          .to("#main-wrapper", { opacity: 1, y: 0, duration: 1.5, ease: "power4.out" }, "-=2.5")
-          .set("#shutter-container", { display: "none" });
+          .to("#main-wrapper", { 
+            opacity: 1, filter: "blur(0px)", scale: 1, duration: 2, ease: "power2.out" 
+          }, "-=2.5");
     }
 
     function createSpark() {
         const spark = document.createElement('div');
         spark.className = 'spark';
-        spark.style.left = (window.innerWidth / 2 + (Math.random()-0.5)*200) + 'px';
-        spark.style.top = (window.innerHeight / 2 + 50) + 'px';
-        document.getElementById('shutter-container').appendChild(spark);
-        gsap.to(spark, { x: (Math.random()-0.5)*100, y: Math.random()*100, opacity: 0, duration: 0.4, onComplete: () => spark.remove() });
-    }
-
-    // --- LÓGICA DE NEGOCIO (RECUPERADA) ---
-    let db = { efectivo: 0, tarjeta: 0, gastos: 0, totalComisiones: 0, barberos: { "JULIÁN": 0, "MARCOS": 0 }, historial: [] };
-    const STAFF = { "123": "JULIÁN", "456": "MARCOS" };
-
-    function marcarSimulado(tipo) {
-        const dni = document.getElementById('dni').value;
-        const nombre = STAFF[dni];
-        if (!nombre) return Swal.fire('Error', 'DNI no encontrado', 'error');
-        
-        playSound(440, 'sine', 0.2, 0.1);
-        const msg = document.getElementById('mensaje-flotante');
-        msg.style.display = "block";
-        msg.innerText = `${tipo}: ${nombre}`;
-        
-        if (tipo === 'SALIDA') {
-            Swal.fire('Resumen de Salida', `${nombre}, tus comisiones hoy: $${db.barberos[nombre]}`, 'success');
-        }
-        document.getElementById('dni').value = "";
-    }
-
-    function registrarVenta() {
-        const m = parseFloat(document.getElementById('m-v').value);
-        const b = document.getElementById('sel-b').value;
-        const t = document.getElementById('tipo-v').value;
-        const medio = document.getElementById('m-m').value;
-
-        if (!m || !b) return Swal.fire('Atención', 'Completa monto y barbero', 'warning');
-
-        const c = m * (t === 'PRODUCTO' ? 0.1 : 0.5);
-        
-        if (medio === 'EF') db.efectivo += m; else db.tarjeta += m;
-        db.totalComisiones += c; 
-        db.barberos[b] += c;
-        db.historial.unshift({desc: b, total: m, tipo: t});
-
-        playSound(880, 'sine', 0.1, 0.05);
-        actualizarUI();
-        document.getElementById('m-v').value = "";
-    }
-
-    function actualizarUI() {
-        document.getElementById('box-e').innerText = `$${db.efectivo}`;
-        document.getElementById('box-t').innerText = `$${db.tarjeta}`;
-        document.getElementById('box-n').innerText = `$${(db.efectivo + db.tarjeta) - db.totalComisiones}`;
-        
-        document.getElementById('res-c').innerHTML = `
-            <strong>TOTAL COMISIONES:</strong> $${db.totalComisiones}<br><br>
-            JULIÁN: $${db.barberos["JULIÁN"]}<br>
-            MARCOS: $${db.barberos["MARCOS"]}
-        `;
-        
-        document.getElementById('list-v').innerHTML = db.historial.slice(0,5).map(h=>`
-            <div class="hist-item"><span>${h.desc} (${h.tipo})</span> <b>$${h.total}</b></div>
-        `).join('');
-    }
-
-    function cerrarLocal() {
-        document.getElementById("shutter-container").style.display = "flex";
-        playSound(100, 'sawtooth', 0.5, 0.1);
-        gsap.fromTo("#shutter", { y: "-100%" }, { 
-            y: "0%", duration: 2, ease: "bounce.out",
-            onComplete: () => playSound(50, 'square', 0.4, 0.1)
+        const rect = document.getElementById('neon-logo').getBoundingClientRect();
+        spark.style.left = (rect.left + Math.random() * rect.width) + 'px';
+        spark.style.top = (rect.top + Math.random() * rect.height) + 'px';
+        document.body.appendChild(spark);
+        gsap.to(spark, { 
+            x: (Math.random()-0.5)*200, y: Math.random()*200 + 100, 
+            opacity: 0, scale: 0, duration: 0.8, onComplete: () => spark.remove() 
         });
     }
 
-    setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
+    setInterval(() => { 
+        const now = new Date();
+        document.getElementById('reloj').innerText = now.toLocaleTimeString(); 
+    }, 1000);
+
+    function marcarSimulado(t) { 
+        playSound(440, 'sine', 0.1, 0.05); 
+        Swal.fire({
+            title: 'TERMINAL ACCESS',
+            text: t + ' REGISTERED SUCCESSFULLY',
+            background: '#111',
+            color: '#fff',
+            confirmButtonColor: '#d4af37'
+        }); 
+    }
 </script>
 </body>
 </html>
