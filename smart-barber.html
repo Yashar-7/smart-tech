@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartBarber Pro - Urban OS</title>
+    <title>SmartBarber Pro - Urban OS Elite</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     
@@ -18,55 +18,81 @@
             color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- PERSIANA URBANA REALISTA --- */
+        /* --- PERSIANA ULTRA-REALISTA --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
             background: #050505; display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
+
         .shutter {
             position: absolute; inset: 0;
-            background: linear-gradient(to right, #111 0%, #333 10%, #222 20%, #333 30%, #111 40%, #333 50%, #111 60%, #333 70%, #222 80%, #333 90%, #111 100%),
-                        repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 2px, transparent 2px, transparent 40px);
+            /* Textura de Acero Galvanizado y Corrugado */
+            background: 
+                linear-gradient(90deg, #111 0%, #333 5%, #1a1a1a 10%, #3a3a3a 15%, #1a1a1a 20%, #444 25%, #111 30%, #333 35%, #1a1a1a 50%, #111 70%, #3a3a3a 85%, #111 100%),
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.7) 0px, rgba(0,0,0,0.2) 2px, transparent 4px, rgba(255,255,255,0.03) 38px, rgba(0,0,0,0.9) 40px);
             background-blend-mode: overlay;
-            border-bottom: 15px solid #111;
+            border-bottom: 20px solid #111;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.9);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .graffiti {
-            position: absolute; font-family: 'Courier New', Courier, monospace;
-            font-size: 8rem; font-weight: 900; color: rgba(255, 255, 255, 0.05);
-            transform: rotate(-10deg); pointer-events: none; white-space: nowrap;
+
+        /* Ruido Industrial (Grunge) */
+        .shutter::before {
+            content: ""; position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.12; pointer-events: none;
         }
+
+        .graffiti {
+            position: absolute; font-family: 'Arial Black', sans-serif;
+            font-size: 9rem; font-weight: 900; color: rgba(255, 255, 255, 0.03);
+            transform: rotate(-8deg); pointer-events: none; white-space: nowrap; text-transform: uppercase;
+        }
+
+        /* Neón de Élite con 8 capas de brillo */
         .neon-text {
             font-size: 3.5rem; font-weight: bold; color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
-            margin-top: 20px; font-family: 'Arial Black', sans-serif; opacity: 0;
+            margin-top: 20px; font-family: 'Arial Black', sans-serif;
+            opacity: 0;
+            text-shadow: 
+                0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-blue), 
+                0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue), 
+                0 0 90px var(--neon-blue), 0 0 120px var(--neon-blue);
         }
+
+        /* Sistema de Chispas */
+        .spark {
+            position: absolute; width: 3px; height: 3px; background: white;
+            border-radius: 50%; pointer-events: none; z-index: 10000;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
         .pole-container {
-            width: 60px; height: 160px; background: #fff; border: 5px solid #222;
-            border-radius: 40px; position: relative; overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+            width: 65px; height: 170px; background: #fff; border: 6px solid #111;
+            border-radius: 50px; position: relative; overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
         }
         .stripes {
             width: 100%; height: 400px;
-            background: repeating-linear-gradient(45deg, var(--barber-red) 0px, var(--barber-red) 30px, #fff 30px, #fff 60px, var(--barber-blue) 60px, var(--barber-blue) 90px, #fff 90px, #fff 120px);
-            animation: rotatePole 1.5s linear infinite;
+            background: repeating-linear-gradient(45deg, var(--barber-red) 0px, var(--barber-red) 35px, #fff 35px, #fff 70px, var(--barber-blue) 70px, var(--barber-blue) 105px, #fff 105px, #fff 140px);
+            animation: rotatePole 1.2s linear infinite;
         }
-        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-120px); } }
+        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-140px); } }
 
-        /* --- DASHBOARD ORIGINAL --- */
+        /* --- DASHBOARD --- */
         #main-wrapper { opacity: 0; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; }
         #reloj { font-size: 2.2rem; font-weight: bold; color: var(--dorado); margin-bottom: 20px; text-shadow: 0 0 15px rgba(212,175,55,0.4); }
-        .demo-badge { background: var(--dorado); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-bottom: 10px; }
-        .card, .admin-panel { background: rgba(30,30,30,0.8); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 25px; border: 1px solid rgba(212,175,55,0.2); width: 100%; box-sizing: border-box; margin-bottom: 20px; }
+        .card, .admin-panel { background: rgba(30,30,30,0.85); backdrop-filter: blur(15px); padding: 1.5rem; border-radius: 25px; border: 1px solid rgba(212,175,55,0.2); width: 100%; box-sizing: border-box; margin-bottom: 20px; }
         .card { max-width: 400px; text-align: center; }
-        .admin-panel { max-width: 850px; border-color: rgba(0, 242, 255, 0.2); }
+        .admin-panel { max-width: 850px; }
         .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
         .stat-card { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border-bottom: 3px solid var(--dorado); text-align: center; }
         .stat-val { font-size: 1.4rem; font-weight: bold; color: #fff; }
-        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; }
         .form-gestion { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 700px) { .form-gestion { grid-template-columns: 1fr; } }
-        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; }
+        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; }
         button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
         .btn-entrada { background: var(--dorado); color: black; }
         .btn-salida { background: #222; color: white; border: 1px solid var(--rojo); }
@@ -74,7 +100,6 @@
         .historial-box { margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; }
         .hist-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; font-size: 0.8rem; }
         #mensaje-flotante { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
-        .exito { background: rgba(76, 175, 80, 0.2); border: 1px solid var(--verde); color: #afffaf; }
     </style>
 </head>
 <body>
@@ -85,143 +110,113 @@
             <div id="pole-wrapper" style="z-index: 10; text-align: center;">
                 <div class="pole-container" style="margin: 0 auto;"><div class="stripes"></div></div>
                 <div class="neon-text" id="neon-logo">SMART BARBER</div>
-                <p id="status-text" style="color: #555; font-family: monospace; margin-top: 10px;">ESTABLECIENDO CONEXIÓN...</p>
+                <p id="status-text" style="color: #444; font-family: monospace; margin-top: 10px; font-size: 0.7rem; letter-spacing: 2px;">INICIANDO HARDWARE...</p>
             </div>
         </div>
     </div>
 
     <div id="main-wrapper">
-        <div class="demo-badge">MODO DEMO: SMARTBARBER PRO</div>
         <div id="reloj">00:00:00</div>
-
         <div class="card">
             <h2 style="color:var(--dorado); margin-bottom:15px">💈 Acceso de Staff</h2>
-            <input type="number" id="dni" placeholder="INGRESE DNI (Ejem: 123)">
+            <input type="number" id="dni" placeholder="DNI BARBERO">
             <div style="display:flex; gap:10px">
                 <button class="btn-entrada" onclick="marcarSimulado('ENTRADA')">Entrada</button>
                 <button class="btn-salida" onclick="marcarSimulado('SALIDA')">Salida</button>
             </div>
-            <div id="mensaje-flotante" class="exito"></div>
+            <div id="mensaje-flotante" style="background: rgba(76,175,80,0.2); border:1px solid var(--verde); color:#afffaf;"></div>
         </div>
 
         <div class="admin-panel">
             <div class="grid-stats">
-                <div class="stat-card" style="border-color:var(--verde)"><div class="stat-label">Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--cyber-blue)"><div class="stat-label">Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--rojo)"><div class="stat-label">Gastos</div><div id="box-g" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--dorado)"><div class="stat-label">Neto Local</div><div id="box-n" class="stat-val">$0</div></div>
+                <div class="stat-card"><div class="stat-label">Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
+                <div class="stat-card"><div class="stat-label">Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
+                <div class="stat-card"><div class="stat-label">Gastos</div><div id="box-g" class="stat-val">$0</div></div>
+                <div class="stat-card"><div class="stat-label">Neto Local</div><div id="box-n" class="stat-val">$0</div></div>
             </div>
-
             <div class="form-gestion">
                 <div>
-                    <p class="stat-label" style="color: var(--dorado);">Registro de Servicios</p>
-                    <select id="sel-b">
-                        <option value="">-- Barbero en Turno --</option>
-                        <option value="JULIÁN">JULIÁN</option>
-                        <option value="MARCOS">MARCOS</option>
-                    </select>
-                    <select id="tipo-v">
-                        <option value="SERVICIO">CORTE / BARBA (50%)</option>
-                        <option value="PRODUCTO">PRODUCTO (10%)</option>
-                    </select>
+                    <select id="sel-b"><option value="">-- Barbero --</option><option value="JULIÁN">JULIÁN</option><option value="MARCOS">MARCOS</option></select>
+                    <select id="tipo-v"><option value="SERVICIO">SERVICIO (50%)</option><option value="PRODUCTO">PRODUCTO (10%)</option></select>
                     <input type="number" id="m-v" placeholder="Monto $">
-                    <select id="m-m">
-                        <option value="EF">EFECTIVO</option>
-                        <option value="TR">TRANSFERENCIA</option>
-                    </select>
+                    <select id="m-m"><option value="EF">EFECTIVO</option><option value="TR">TRANSFERENCIA</option></select>
                     <button class="btn-accion" onclick="registrarVenta()">Cargar Venta</button>
-                    
-                    <div class="historial-box">
-                        <p class="stat-label">Últimos Trabajos</p>
-                        <div id="list-v"></div>
-                    </div>
+                    <div class="historial-box"><div id="list-v"></div></div>
                 </div>
-
-                <div>
-                    <p class="stat-label" style="color: var(--dorado);">Liquidación Staff</p>
-                    <div id="res-c" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; min-height: 100px;">
-                        Inicie sesión para ver comisiones...
-                    </div>
-                    <button style="background: #333; color: #fff; margin-top: 20px; border: 1px solid #555;" onclick="alert('Reporte enviado.')">Simular Cierre Diario</button>
-                </div>
+                <div id="res-c" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px;">Liquidación...</div>
             </div>
         </div>
-
-        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid var(--rojo); padding: 10px 30px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-size: 0.8rem;">
-            🔴 FINALIZAR JORNADA (Cerrar Persiana)
-        </button>
+        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid var(--rojo); padding: 10px 30px; border-radius: 50px; cursor: pointer; margin-top: 20px;">🔴 CERRAR LOCAL</button>
     </div>
 
 <script>
-    // --- ANIMACIÓN DE ENTRADA ---
-    window.addEventListener('load', () => {
-        const tl = gsap.timeline();
-        tl.to("#neon-logo", { opacity: 1, duration: 0.1, repeat: 5, yoyo: true, ease: "power4.in" }, "+=0.5")
-          .to("#neon-logo", { opacity: 1, textShadow: "0 0 30px #00f2ff", duration: 0.5 })
-          .to("#status-text", { textContent: "SISTEMA ONLINE", color: "#00f2ff", duration: 0.1 })
-          .to("#shutter", { x: 2, repeat: 10, yoyo: true, duration: 0.05 })
-          .to("#shutter", { y: "-100%", duration: 2, ease: "expo.inOut" })
-          .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1")
-          .set("#shutter-container", { display: "none" });
-    });
-
-    // --- LÓGICA DE CIERRE ---
-    function cerrarLocal() {
-        document.getElementById("shutter-container").style.display = "flex";
-        gsap.fromTo("#shutter", { y: "-100%" }, { 
-            y: "0%", duration: 1.2, ease: "bounce.out",
-            onComplete: () => {
-                Swal.fire({ title: 'Local Cerrado', icon: 'info', timer: 1500, showConfirmButton: false })
-                .then(() => { window.location.href = "index.html"; });
-            }
+    // --- EFECTO DE CHISPAS ---
+    function createSpark() {
+        const shutter = document.getElementById('shutter-container');
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+        const x = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
+        const y = window.innerHeight / 2 + 50;
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+        shutter.appendChild(spark);
+        gsap.to(spark, {
+            x: (Math.random() - 0.5) * 100, y: Math.random() * 100,
+            opacity: 0, duration: 0.4, onComplete: () => spark.remove()
         });
     }
 
-    // --- LÓGICA DE NEGOCIO ORIGINAL ---
+    // --- ANIMACIÓN DE ENTRADA ÉPICA ---
+    window.addEventListener('load', () => {
+        const tl = gsap.timeline();
+        tl.to("#neon-logo", { 
+            opacity: 1, duration: 0.05, repeat: 10, yoyo: true, 
+            onRepeat: () => { if(Math.random() > 0.5) createSpark(); } 
+        }, "+=0.5")
+          .to("#neon-logo", { opacity: 1, duration: 0.5 })
+          .to("#status-text", { textContent: "SISTEMA ONLINE", color: "#00f2ff", duration: 0.1 })
+          .to("#shutter", { y: 10, duration: 0.1, repeat: 5, yoyo: true }) // Vibración motor
+          .to("#shutter", { y: "-100%", duration: 2.5, ease: "expo.inOut" })
+          .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1.5")
+          .set("#shutter-container", { display: "none" });
+    });
+
+    // --- LÓGICA DE NEGOCIO ---
     let db = { efectivo: 0, tarjeta: 0, gastos: 0, totalComisiones: 0, barberos: { "JULIÁN": 0, "MARCOS": 0 }, historial: [] };
     const STAFF = { "123": "JULIÁN", "456": "MARCOS" };
 
     function marcarSimulado(tipo) {
         const dni = document.getElementById('dni').value;
         const nombre = STAFF[dni];
-        const msg = document.getElementById('mensaje-flotante');
-        if (!nombre) { Swal.fire('Error', 'DNI no reconocido.', 'error'); return; }
-        msg.style.display = "block";
-        msg.innerText = `${tipo}: ${nombre} - ${new Date().toLocaleTimeString()}`;
-        if (tipo === 'SALIDA') {
-            const comision = db.barberos[nombre] || 0;
-            Swal.fire({ title: `¡Buen descanso, ${nombre}!`, html: `Comisión: <b style="color:#4caf50;">$${comision.toLocaleString()}</b>`, icon: 'success', background: '#1a1a1a', color: '#fff' });
-        }
+        if (!nombre) return Swal.fire('Error', 'DNI no encontrado', 'error');
+        document.getElementById('mensaje-flotante').style.display = "block";
+        document.getElementById('mensaje-flotante').innerText = `${tipo}: ${nombre}`;
+        if (tipo === 'SALIDA') Swal.fire('¡Adiós!', `${nombre}, comisiones hoy: $${db.barberos[nombre]}`, 'success');
         document.getElementById('dni').value = "";
-        setTimeout(() => msg.style.display = "none", 5000);
     }
 
     function registrarVenta() {
-        const monto = parseFloat(document.getElementById('m-v').value);
-        const barbero = document.getElementById('sel-b').value;
-        const tipo = document.getElementById('tipo-v').value;
-        const metodo = document.getElementById('m-m').value;
-        if (!monto || !barbero) return Swal.fire('Atención', 'Complete monto y barbero', 'warning');
-        const porc = (tipo === 'PRODUCTO') ? 0.10 : 0.50;
-        const comision = monto * porc;
-        if (metodo === 'EF') db.efectivo += monto; else db.tarjeta += monto;
-        db.totalComisiones += comision;
-        db.barberos[barbero] += comision;
-        db.historial.unshift({ desc: `${barbero} (${tipo[0]})`, total: monto, hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+        const m = parseFloat(document.getElementById('m-v').value);
+        const b = document.getElementById('sel-b').value;
+        if (!m || !b) return;
+        const c = m * (document.getElementById('tipo-v').value === 'PRODUCTO' ? 0.1 : 0.5);
+        if (document.getElementById('m-m').value === 'EF') db.efectivo += m; else db.tarjeta += m;
+        db.totalComisiones += c; db.barberos[b] += c;
+        db.historial.unshift({desc: b, total: m});
         actualizarUI();
-        document.getElementById('m-v').value = "";
     }
 
     function actualizarUI() {
-        document.getElementById('box-e').innerText = `$${db.efectivo.toLocaleString()}`;
-        document.getElementById('box-t').innerText = `$${db.tarjeta.toLocaleString()}`;
-        document.getElementById('box-n').innerText = `$${((db.efectivo + db.tarjeta) - db.totalComisiones).toLocaleString()}`;
-        let htmlComisiones = `<b>Total Staff: $${db.totalComisiones.toLocaleString()}</b><br><hr>`;
-        for (let b in db.barberos) { htmlComisiones += `<div class="hist-item"><span>${b}</span> <span>$${db.barberos[b].toLocaleString()}</span></div>`; }
-        document.getElementById('res-c').innerHTML = htmlComisiones;
-        let htmlHist = "";
-        db.historial.slice(0, 5).forEach(h => { htmlHist += `<div class="hist-item"><span>${h.hora} - ${h.desc}</span> <b>$${h.total}</b></div>`; });
-        document.getElementById('list-v').innerHTML = htmlHist;
+        document.getElementById('box-e').innerText = `$${db.efectivo}`;
+        document.getElementById('box-t').innerText = `$${db.tarjeta}`;
+        document.getElementById('box-n').innerText = `$${(db.efectivo+db.tarjeta)-db.totalComisiones}`;
+        document.getElementById('res-c').innerText = `Total Comisiones: $${db.totalComisiones}`;
+        document.getElementById('list-v').innerHTML = db.historial.slice(0,3).map(h=>`<div class="hist-item">${h.desc} <b>$${h.total}</b></div>`).join('');
+    }
+
+    function cerrarLocal() {
+        document.getElementById("shutter-container").style.display = "flex";
+        gsap.fromTo("#shutter", { y: "-100%" }, { y: "0%", duration: 1.5, ease: "bounce.out" });
     }
 
     setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
