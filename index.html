@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-        body { background-color: #050508; color: #fff; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        /* Cambiamos overflow a auto para poder ver las tarjetas si la pantalla es pequeña */
+        body { background-color: #050508; color: #fff; overflow-x: hidden; overflow-y: auto; font-family: 'Inter', sans-serif; margin: 0; }
 
-        /* PANTALLA DE INICIO */
         #boot-screen {
             position: fixed; inset: 0; z-index: 500;
             background: #000; display: flex; flex-direction: column;
@@ -23,13 +23,11 @@
         }
         .btn-boot:hover { background: #4ade80; color: #000; box-shadow: 0 0 50px #4ade80; }
 
-        /* LÍNEA DE ESCANEO */
         #scan-line {
             position: fixed; top: -10px; left: 0; width: 100%; height: 4px;
             background: #4ade80; box-shadow: 0 0 20px #4ade80; z-index: 1000; opacity: 0;
         }
 
-        /* CAPA DE INTRO */
         #intro-layer {
             position: fixed; inset: 0; z-index: 100; display: none;
             background: #050508; align-items: center; justify-content: center;
@@ -52,17 +50,19 @@
         }
         .sm-text { transform: rotate(-45deg); font-weight: 900; font-size: 2.8rem; text-shadow: 0 0 20px #fff; opacity: 0; }
 
-        #main-site { opacity: 0; visibility: hidden; perspective: 1000px; }
+        /* Cambiado a display none para asegurar que no interfiera antes de tiempo */
+        #main-site { display: none; opacity: 0; perspective: 1000px; width: 100%; }
 
-        /* EFECTO CARTA 3D */
         .project-card {
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
+            background: rgba(255,255,255,0.02);
         }
         
         .project-card:hover {
             transform: rotateY(-15deg) rotateX(10deg) translateY(-10px);
             box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.5);
+            background: rgba(255,255,255,0.05);
         }
 
         .gradient-text {
@@ -91,7 +91,7 @@
     <main id="main-site">
         <nav class="p-6 border-b border-white/10 flex justify-between items-center bg-black/50 backdrop-blur-md">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 border-2 border-green-500 rotate-45 flex items-center justify-center font-black text-green-400 shadow-[0_0_15px_rgba(74,222,128,0.4)]">
+                <div class="w-8 h-8 border-2 border-green-500 rotate-45 flex items-center justify-center font-black text-green-400">
                     <span style="transform: rotate(-45deg)">SM</span>
                 </div>
                 <span class="font-bold tracking-tighter text-xl gradient-text">SMART TECH</span>
@@ -99,35 +99,26 @@
         </nav>
 
         <div class="p-10 md:p-20 text-center">
-            <h1 id="hero-title" class="text-6xl md:text-8xl font-black mb-10 tracking-tighter gradient-text">BIENVENIDO.</h1>
+            <h1 id="hero-title" class="text-6xl md:text-8xl font-black mb-16 tracking-tighter gradient-text">BIENVENIDO.</h1>
             
-            <div id="hero-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+            <div id="hero-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto pb-20">
                 
-                <div class="project-card group p-10 border border-white/5 bg-white/[0.02] rounded-[2.5rem] hover:border-green-500/50 relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-500/10 blur-3xl group-hover:bg-green-500/20 transition-all"></div>
-                    <h3 class="text-green-400 font-bold text-3xl mb-4 text-left">Smart Barber</h3>
-                    <p class="text-gray-400 text-left text-sm leading-relaxed mb-6">Gestión de turnos y sistema de marcación de fin de shift para barberos. Optimizado para Cursor.</p>
-                    <div class="flex gap-2">
-                        <span class="text-[10px] px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">LIVE SYSTEM</span>
-                    </div>
+                <div class="project-card group p-10 border border-white/10 rounded-[2.5rem] hover:border-green-500/50 relative overflow-hidden text-left">
+                    <h3 class="text-green-400 font-bold text-3xl mb-4">Smart Barber</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Gestión de turnos y sistema de marcación de fin de shift para barberos. Optimizado para Cursor.</p>
+                    <span class="text-[10px] px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-full">LIVE SYSTEM</span>
                 </div>
 
-                <div class="project-card group p-10 border border-white/5 bg-white/[0.02] rounded-[2.5rem] hover:border-blue-500/50 relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
-                    <h3 class="text-blue-400 font-bold text-3xl mb-4 text-left">Honey Gestion</h3>
-                    <p class="text-gray-400 text-left text-sm leading-relaxed mb-6">Administración integral de inventario y flujos de trabajo con sincronización en la nube.</p>
-                    <div class="flex gap-2">
-                        <span class="text-[10px] px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">CLOUD SYNC</span>
-                    </div>
+                <div class="project-card group p-10 border border-white/10 rounded-[2.5rem] hover:border-blue-500/50 relative overflow-hidden text-left">
+                    <h3 class="text-blue-400 font-bold text-3xl mb-4">Honey Gestion</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Administración integral de inventario y flujos de trabajo con sincronización en la nube.</p>
+                    <span class="text-[10px] px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">CLOUD SYNC</span>
                 </div>
 
-                <div class="project-card group p-10 border border-white/5 bg-white/[0.02] rounded-[2.5rem] hover:border-purple-500/50 relative overflow-hidden">
-                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/10 blur-3xl group-hover:bg-purple-500/20 transition-all"></div>
-                    <h3 class="text-purple-400 font-bold text-3xl mb-4 text-left">Core Security</h3>
-                    <p class="text-gray-400 text-left text-sm leading-relaxed mb-6">Infraestructura de seguridad avanzada y automatización mediante algoritmos inteligentes.</p>
-                    <div class="flex gap-2">
-                        <span class="text-[10px] px-3 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full">AI DRIVEN</span>
-                    </div>
+                <div class="project-card group p-10 border border-white/10 rounded-[2.5rem] hover:border-purple-500/50 relative overflow-hidden text-left">
+                    <h3 class="text-purple-400 font-bold text-3xl mb-4">Core Security</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Infraestructura de seguridad avanzada y automatización mediante algoritmos inteligentes.</p>
+                    <span class="text-[10px] px-3 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full">AI DRIVEN</span>
                 </div>
 
             </div>
@@ -137,7 +128,7 @@
     <script>
         function bootSystem() {
             const voice = document.getElementById('intro-voice');
-            voice.play();
+            voice.play().catch(e => console.log("Audio play failed"));
             
             gsap.to("#boot-screen", { opacity: 0, duration: 1, onComplete: () => {
                 document.getElementById('boot-screen').style.display = 'none';
@@ -151,23 +142,26 @@
             
             tl.from("#main-rhombus", { scale: 0, duration: 1.5, ease: "back.out(1.7)" });
             tl.to("#sm-logo", { opacity: 1, duration: 1 }, "-=0.5");
-            tl.to("#main-rhombus", { rotateZ: 765, duration: 4, ease: "power4.inOut" });
+            tl.to("#main-rhombus", { rotateZ: 765, duration: 3, ease: "power4.inOut" });
 
             tl.to("#intro-layer", { opacity: 0, duration: 0.8 });
             tl.set("#intro-layer", { display: "none" });
-            tl.set("#main-site", { visibility: "visible", opacity: 1 });
+            
+            // Aquí es donde activamos el sitio principal correctamente
+            tl.set("#main-site", { display: "block" });
+            tl.to("#main-site", { opacity: 1, duration: 0.1 });
             
             tl.set("#scan-line", { opacity: 1 });
-            tl.to("#scan-line", { top: "100%", duration: 2.5, ease: "none" });
+            tl.to("#scan-line", { top: "100%", duration: 2, ease: "none" });
             
-            tl.from("#hero-title", { y: 50, opacity: 0, duration: 1.5 }, "-=2.2");
+            tl.from("#hero-title", { y: 50, opacity: 0, duration: 1 }, "-=1.5");
             tl.from(".project-card", { 
-                y: 100, 
+                y: 80, 
                 opacity: 0, 
-                duration: 1.2, 
+                duration: 1, 
                 stagger: 0.2, 
-                ease: "power4.out" 
-            }, "-=1.8");
+                ease: "power3.out" 
+            }, "-=1.2");
             tl.to("#scan-line", { opacity: 0 });
         }
     </script>
