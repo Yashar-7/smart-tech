@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,11 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#f39c12">
     <title>DEMO - Gestión Almacén Honey</title>
+    
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
     <style>
         :root { --naranja: #f39c12; --amarillo: #f1c40f; --negro: #1a1a1a; --rojo: #e74c3c; --verde: #2ecc71; --azul: #2980b9; }
-        body { font-family: sans-serif; background: var(--negro); color: white; padding: 10px; text-align: center; margin:0; }
+        
+        body { font-family: sans-serif; background: var(--negro); color: white; padding: 10px; text-align: center; margin:0; overflow-x: hidden; }
+        
+        /* --- SISTEMA DE PUERTAS BÚNKER --- */
+        #gate-container {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; pointer-events: none;
+        }
+        .gate-panel {
+            width: 50%; height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+            display: flex; align-items: center;
+            border: 2px solid rgba(243, 156, 18, 0.1);
+            position: relative;
+        }
+        .gate-left { justify-content: flex-end; border-right: 2px solid var(--naranja); }
+        .gate-right { justify-content: flex-start; border-left: 2px solid var(--naranja); }
+        
+        .gate-logo {
+            font-size: 5rem; font-weight: 900; color: var(--naranja);
+            text-shadow: 0 0 30px rgba(243, 156, 18, 0.5);
+            position: absolute;
+        }
+        .left-text { right: -25px; }
+        .right-text { left: -25px; }
+
+        /* Efecto de Rayado Industrial */
+        .gate-panel::after {
+            content: ""; position: absolute; inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+        }
+        /* ---------------------------------- */
+
         .card { background: #2c3e50; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: left; border: 1px solid #444; }
         input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: none; box-sizing: border-box; font-size: 1rem; background: white; color: black; }
         .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; }
@@ -27,6 +61,15 @@
     </style>
 </head>
 <body>
+
+    <div id="gate-container">
+        <div class="gate-panel gate-left">
+            <span class="gate-logo left-text">HO</span>
+        </div>
+        <div class="gate-panel gate-right">
+            <span class="gate-logo right-text">NEY</span>
+        </div>
+    </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span class="badge-demo">MODO DEMOSTRACIÓN</span>
@@ -68,6 +111,18 @@
     </div>
 
 <script>
+    // --- LÓGICA DE APERTURA DE PUERTAS ---
+    window.addEventListener('DOMContentLoaded', () => {
+        const tl = gsap.timeline();
+        
+        // Esperar un momento antes de abrir
+        tl.to(".gate-logo", { scale: 1.2, duration: 0.8, ease: "power2.out" })
+          .to(".gate-left", { x: "-100%", duration: 1.5, ease: "power4.inOut" }, "+=0.2")
+          .to(".gate-right", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "<")
+          .to("#gate-container", { display: "none" });
+    });
+    // -------------------------------------
+
     const SB_URL = "https://svpurpvbiujhcbiugrkh.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2cHVycHZiaXVqaGNiaXVncmtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NDgzMTUsImV4cCI6MjA4MzMyNDMxNX0.AivKJ0_N0z_4T4vLNfUcE2hepJ1XXOO8-4fSA3PJXdc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
