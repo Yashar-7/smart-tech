@@ -18,7 +18,7 @@
             color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- PERSIANA ULTRA-REALISTA V2 --- */
+        /* --- PERSIANA MOTOR GRÁFICO "NEXT-GEN" --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
             background: #000; display: flex; align-items: center; justify-content: center;
@@ -27,46 +27,43 @@
 
         .shutter {
             position: absolute; inset: 0;
-            /* Contraste mejorado para simular relieve 3D profundo */
             background: 
-                linear-gradient(90deg, 
-                    #0a0a0a 0%, #2a2a2a 5%, #0f0f0f 12%, #333 20%, 
-                    #111 35%, #444 50%, #111 65%, #333 80%, #0a0a0a 100%),
-                repeating-linear-gradient(0deg, 
-                    rgba(0,0,0,0.85) 0px, 
-                    rgba(0,0,0,0.4) 2px, 
-                    transparent 4px, 
-                    rgba(255,255,255,0.05) 36px, 
-                    rgba(0,0,0,0.9) 40px);
-            background-blend-mode: overlay;
-            border-bottom: 25px solid #000;
-            box-shadow: inset 0 0 100px rgba(0,0,0,1), inset 0 0 200px rgba(0,0,0,0.8);
+                /* Capa 1: Metal Base */
+                linear-gradient(90deg, #050505 0%, #1a1a1a 5%, #0a0a0a 12%, #222 20%, #0a0a0a 35%, #333 50%, #0a0a0a 65%, #222 80%, #050505 100%),
+                /* Capa 2: Brillo Especular (Efecto PS5) */
+                linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 55%, transparent 70%),
+                /* Capa 3: Relieve Industrial */
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.9) 0px, rgba(0,0,0,0.5) 2px, transparent 4px, rgba(255,255,255,0.03) 36px, rgba(0,0,0,1) 40px);
+            background-blend-mode: screen, overlay;
+            background-size: 100% 100%, 200% 100%, 100% 100%;
+            border-bottom: 28px solid #000;
+            box-shadow: inset 0 0 150px rgba(0,0,0,1);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: filter 0.1s ease; /* Para el efecto de luz del neón */
+            animation: metallicShine 10s linear infinite;
+        }
+
+        @keyframes metallicShine {
+            0% { background-position: 0% 0%, -200% 0%, 0% 0%; }
+            100% { background-position: 0% 0%, 200% 0%, 0% 0%; }
         }
 
         .shutter::before {
             content: ""; position: absolute; inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.15; pointer-events: none;
+            opacity: 0.12; pointer-events: none;
         }
 
         .graffiti {
             position: absolute; font-family: 'Arial Black', sans-serif;
-            font-size: 9rem; font-weight: 900; color: rgba(255, 255, 255, 0.03);
+            font-size: 9rem; font-weight: 900; color: rgba(255, 255, 255, 0.02);
             transform: rotate(-8deg); pointer-events: none; white-space: nowrap; text-transform: uppercase;
         }
 
-        /* Neón de Élite con brillo ultra-intenso */
         .neon-text {
             font-size: 4rem; font-weight: 900; color: #fff;
             margin-top: 25px; font-family: 'Arial Black', sans-serif;
             opacity: 0;
-            text-shadow: 
-                0 0 10px #fff, 0 0 20px #fff, 0 0 40px var(--neon-blue), 
-                0 0 80px var(--neon-blue), 0 0 120px var(--neon-blue), 
-                0 0 200px var(--neon-blue);
-            filter: brightness(1.2);
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue), 0 0 150px var(--neon-blue);
         }
 
         .spark {
@@ -98,7 +95,6 @@
         .stat-val { font-size: 1.4rem; font-weight: bold; color: #fff; }
         .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; }
         .form-gestion { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 700px) { .form-gestion { grid-template-columns: 1fr; } }
         input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; }
         button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
         .btn-entrada { background: var(--dorado); color: black; }
@@ -109,7 +105,7 @@
         #mensaje-flotante { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
     </style>
 </head>
-<body>
+<body onclick="initAudio()">
 
     <div id="shutter-container">
         <div class="shutter" id="shutter">
@@ -117,7 +113,7 @@
             <div id="pole-wrapper" style="z-index: 10; text-align: center;">
                 <div class="pole-container" style="margin: 0 auto;"><div class="stripes"></div></div>
                 <div class="neon-text" id="neon-logo">SMART BARBER</div>
-                <p id="status-text" style="color: #444; font-family: monospace; margin-top: 15px; font-size: 0.7rem; letter-spacing: 3px;">CONECTANDO HARDWARE...</p>
+                <p id="status-text" style="color: #555; font-family: monospace; margin-top: 15px; font-size: 0.7rem; letter-spacing: 3px;">CLICK PARA INICIAR SISTEMA</p>
             </div>
         </div>
     </div>
@@ -157,44 +153,75 @@
     </div>
 
 <script>
+    // --- MOTOR DE AUDIO SINTETIZADO (NEXT-GEN) ---
+    let audioIniciado = false;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(freq, type, dur, vol) {
+        if(!audioIniciado) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + dur);
+    }
+
+    function initAudio() {
+        if(audioIniciado) return;
+        audioIniciado = true;
+        ctx.resume();
+        startSequence();
+    }
+
     function createSpark() {
         const shutter = document.getElementById('shutter-container');
         const spark = document.createElement('div');
         spark.className = 'spark';
         const x = window.innerWidth / 2 + (Math.random() - 0.5) * 200;
         const y = window.innerHeight / 2 + 60;
-        spark.style.left = x + 'px';
-        spark.style.top = y + 'px';
+        spark.style.left = x + 'px'; spark.style.top = y + 'px';
         shutter.appendChild(spark);
-        gsap.to(spark, {
-            x: (Math.random() - 0.5) * 150, y: Math.random() * 150,
-            opacity: 0, duration: 0.5, onComplete: () => spark.remove()
-        });
+        playSound(100 + Math.random() * 400, 'sawtooth', 0.1, 0.05); // Sonido de chispa
+        gsap.to(spark, { x: (Math.random() - 0.5) * 150, y: Math.random() * 150, opacity: 0, duration: 0.5, onComplete: () => spark.remove() });
     }
 
-    // --- ANIMACIÓN DE ENTRADA CON LUZ DINÁMICA ---
-    window.addEventListener('load', () => {
+    function startSequence() {
         const tl = gsap.timeline();
-        
-        tl.to("#neon-logo", { 
+        tl.to("#status-text", { textContent: "BOOTING OS...", duration: 1 })
+          .to("#neon-logo", { 
             opacity: 1, duration: 0.05, repeat: 14, yoyo: true, 
             onRepeat: () => { 
                 if(Math.random() > 0.4) {
                     createSpark();
-                    gsap.set("#shutter", { filter: "brightness(1.4) contrast(1.1)" });
+                    gsap.set("#shutter", { filter: "brightness(1.5) contrast(1.2)" });
+                    playSound(60, 'square', 0.05, 0.1); // Sonido parpadeo neón
                 } else {
                     gsap.set("#shutter", { filter: "brightness(1) contrast(1)" });
                 }
             } 
-        }, "+=0.8")
-          .to("#shutter", { filter: "brightness(1.1)", duration: 0.2 })
-          .to("#neon-logo", { opacity: 1, duration: 0.5 })
-          .to("#status-text", { textContent: "SISTEMA ONLINE", color: "#00f2ff", duration: 0.1 })
-          .to("#shutter", { x: 4, duration: 0.05, repeat: 12, yoyo: true }) // Vibración fuerte
-          .to("#shutter", { y: "-100%", duration: 2.8, ease: "power4.inOut" })
+          })
+          .to("#status-text", { textContent: "HYDRAULICS READY", color: "#00f2ff", duration: 0.5 })
+          .to("#shutter", { 
+            x: 3, duration: 0.05, repeat: 15, yoyo: true,
+            onRepeat: () => playSound(40, 'sine', 0.1, 0.02) // Vibración motor
+          })
+          .to("#shutter", { 
+            y: "-100%", duration: 3, ease: "power4.inOut",
+            onStart: () => {
+                // Sonido Clack-Clack secuencial
+                for(let i=0; i<10; i++) {
+                    setTimeout(() => playSound(80 - i*5, 'triangle', 0.2, 0.05), i * 250);
+                }
+            }
+          })
           .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1.8")
           .set("#shutter-container", { display: "none" });
-    });
+    }
 
     // --- LÓGICA DE NEGOCIO ---
     let db = { efectivo: 0, tarjeta: 0, gastos: 0, totalComisiones: 0, barberos: { "JULIÁN": 0, "MARCOS": 0 }, historial: [] };
@@ -204,6 +231,7 @@
         const dni = document.getElementById('dni').value;
         const nombre = STAFF[dni];
         if (!nombre) return Swal.fire('Error', 'DNI no encontrado', 'error');
+        playSound(440, 'sine', 0.2, 0.1);
         document.getElementById('mensaje-flotante').style.display = "block";
         document.getElementById('mensaje-flotante').innerText = `${tipo}: ${nombre}`;
         if (tipo === 'SALIDA') Swal.fire('¡Adiós!', `${nombre}, comisiones hoy: $${db.barberos[nombre]}`, 'success');
@@ -218,6 +246,7 @@
         if (document.getElementById('m-m').value === 'EF') db.efectivo += m; else db.tarjeta += m;
         db.totalComisiones += c; db.barberos[b] += c;
         db.historial.unshift({desc: b, total: m});
+        playSound(880, 'sine', 0.1, 0.05);
         actualizarUI();
     }
 
@@ -231,7 +260,11 @@
 
     function cerrarLocal() {
         document.getElementById("shutter-container").style.display = "flex";
-        gsap.fromTo("#shutter", { y: "-100%" }, { y: "0%", duration: 1.5, ease: "bounce.out" });
+        playSound(100, 'sawtooth', 0.5, 0.1);
+        gsap.fromTo("#shutter", { y: "-100%" }, { 
+            y: "0%", duration: 1.5, ease: "bounce.out",
+            onComplete: () => playSound(50, 'square', 0.4, 0.1)
+        });
     }
 
     setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
