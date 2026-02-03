@@ -10,127 +10,150 @@
     
     <style>
         :root { 
-            --dorado: #d4af37; --neon-blue: #00f2ff; --barber-red: #ff0000; --barber-blue: #0055ff;
+            --dorado: #d4af37; --verde: #4caf50; --rojo: #f44336; 
+            --neon-blue: #00f2ff; --barber-red: #ff0000; --barber-blue: #0055ff;
         }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; background: #050505;
-            color: white; margin: 0; overflow: hidden;
+            font-family: 'Segoe UI', sans-serif; background: #000;
+            color: white; margin: 0; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- CONTENEDOR CINEMATOGRÁFICO --- */
+        /* --- CONTENEDOR DE LA PERSIANA (Z-INDEX ALTO) --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
             background: #000; display: flex; align-items: center; justify-content: center;
-            perspective: 1200px; /* Profundidad 3D */
         }
 
-        /* --- PERSIANA HIPERREALISTA --- */
+        /* --- PERSIANA METALIZADA 8K --- */
         .shutter {
             position: absolute; inset: 0;
-            /* Textura de metal corrugado real */
             background: 
-                linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                url('https://www.transparenttextures.com/patterns/carbon-fibre.png'),
-                linear-gradient(90deg, #0a0a0a 0%, #1a1a1a 10%, #050505 20%, #222 50%, #050505 80%, #1a1a1a 90%, #0a0a0a 100%);
-            background-blend-mode: multiply, normal, normal;
-            border-bottom: 40px solid #111;
-            /* Sombra de contacto real */
-            box-shadow: inset 0 0 200px rgba(0,0,0,0.9), 0 50px 100px rgba(0,0,0,1);
+                /* Relieve de metal corrugado industrial */
+                repeating-linear-gradient(0deg, 
+                    #050505 0px, #0a0a0a 2px, #1a1a1a 4px, #0a0a0a 38px, #000 40px),
+                /* Reflejo de luz lateral */
+                linear-gradient(90deg, 
+                    rgba(0,0,0,1) 0%, rgba(255,255,255,0.03) 50%, rgba(0,0,0,1) 100%);
+            background-blend-mode: overlay;
+            border-bottom: 35px solid #080808;
+            box-shadow: inset 0 0 100px rgba(0,0,0,1);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* Suciedad y desgaste (El secreto del realismo) */
-        .shutter::before {
+        /* Efecto de "Vignette" para realismo de cámara */
+        .shutter::after {
             content: ""; position: absolute; inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/p6.png'); /* Micro-polvo */
-            opacity: 0.4; pointer-events: none;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
         }
 
-        /* --- LOGO NEÓN "TUBULAR" --- */
+        /* --- LOGO Y POLO --- */
         .neon-box {
-            padding: 20px 40px;
-            border: 2px solid rgba(0, 242, 255, 0.3);
-            border-radius: 10px;
-            background: rgba(0, 242, 255, 0.03);
-            backdrop-filter: blur(2px);
-            position: relative;
-            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.1);
+            padding: 30px 60px; border-radius: 15px;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.2);
+            backdrop-filter: blur(10px); position: relative; z-index: 10;
         }
 
         .neon-text {
-            font-size: 4.8rem; font-weight: 900; color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 8px; opacity: 0;
-            /* Renderizado de cristal */
-            text-shadow: 
-                0 0 2px #fff,
-                0 0 10px rgba(0, 242, 255, 0.8),
-                0 0 35px rgba(0, 242, 255, 0.4),
-                0 0 70px rgba(0, 242, 255, 0.2);
-            filter: blur(0.5px); /* Suavizado de lente */
+            font-size: clamp(2rem, 8vw, 4.5rem); font-weight: 900; color: #fff;
+            font-family: 'Orbitron', sans-serif; letter-spacing: 10px; opacity: 0;
+            text-shadow: 0 0 5px #fff, 0 0 15px var(--neon-blue), 0 0 30px var(--neon-blue);
         }
 
-        /* --- BARBER POLE HIPERREALISTA --- */
         .pole-glass {
-            width: 65px; height: 160px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px; position: relative; overflow: hidden;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.2);
-            margin-bottom: 30px;
+            width: 70px; height: 180px; background: rgba(255,255,255,0.05);
+            border: 3px solid #111; border-radius: 40px; overflow: hidden;
+            margin-bottom: 25px; box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
         .stripes {
             width: 100%; height: 400px;
-            background: repeating-linear-gradient(45deg, #cc0000 0px, #cc0000 40px, #fff 40px, #fff 80px, #0033aa 80px, #0033aa 120px, #fff 120px, #fff 160px);
+            background: repeating-linear-gradient(45deg, #cc0000 0px, #cc0000 35px, #fff 35px, #fff 70px, #0033aa 70px, #0033aa 105px, #fff 105px, #fff 140px);
             animation: rotatePole 1.5s linear infinite;
-            filter: saturate(1.5) contrast(1.2);
         }
 
-        /* --- EFECTO CÁMARA VIGNETTE --- */
-        #shutter-container::after {
-            content: ""; position: absolute; inset: 0;
-            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 100%);
-            pointer-events: none;
+        /* --- DASHBOARD (TU CÓDIGO ORIGINAL RECUPERADO) --- */
+        #main-wrapper { 
+            opacity: 0; width: 100%; max-width: 1000px; margin: 0 auto;
+            padding: 20px; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; position: relative; z-index: 1; 
         }
 
-        /* Dashboard (Conserva tu lógica pero con estética 8K) */
-        #main-wrapper { opacity: 0; padding: 40px; transform: scale(1.1); filter: blur(10px); }
-        .card-8k { background: rgba(15,15,15,0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 30px; backdrop-filter: blur(30px); }
+        #reloj { font-size: 2.5rem; color: var(--dorado); margin: 20px 0; font-family: 'Orbitron'; text-shadow: 0 0 10px rgba(212,175,55,0.4); }
+
+        .card, .admin-panel { 
+            background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 25px; padding: 1.5rem; width: 100%; box-sizing: border-box; margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 100%; margin-bottom: 20px; }
+        .stat-card { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; border-bottom: 3px solid var(--dorado); text-align: center; }
+        .stat-val { font-size: 1.4rem; font-weight: bold; }
         
-        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-160px); } }
+        .form-gestion { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 100%; }
 
-        .spark { position: absolute; width: 3px; height: 3px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #00f2ff; pointer-events: none; }
+        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #333; background: #0a0a0a; color: white; }
+        button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
+        
+        .btn-entrada { background: var(--dorado); color: #000; }
+        .btn-salida { background: transparent; color: #fff; border: 1px solid var(--rojo); }
+        .btn-accion { background: var(--verde); color: #fff; }
+
+        .spark { position: absolute; width: 3px; height: 3px; background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 10px var(--neon-blue); }
+
+        @keyframes rotatePole { from { transform: translateY(0); } to { transform: translateY(-140px); } }
     </style>
 </head>
 <body onclick="initAudio()">
 
     <div id="shutter-container">
         <div class="shutter" id="shutter">
-            <div class="pole-glass">
-                <div class="stripes"></div>
-            </div>
+            <div class="pole-glass"><div class="stripes"></div></div>
             <div class="neon-box">
                 <div class="neon-text" id="neon-logo">SMART BARBER</div>
             </div>
-            <p id="status-text" style="color: #666; font-family: 'Orbitron'; margin-top: 30px; font-size: 0.7rem; letter-spacing: 5px; text-transform: uppercase;">
-                LOCKED // PRESS TO ENGAGE
-            </p>
+            <p id="status-text" style="color: #555; font-family: 'Orbitron'; margin-top: 30px; letter-spacing: 5px; font-size: 0.7rem;">CLICK PARA ACCEDER AL SISTEMA</p>
         </div>
     </div>
 
     <div id="main-wrapper">
-        <h1 id="reloj" style="text-align:center; font-family:'Orbitron'; color:var(--dorado)">00:00:00</h1>
-        <div class="card-8k" style="max-width: 500px; margin: auto; padding: 30px; text-align: center;">
-             <h2 style="font-family:'Orbitron'">ADMIN TERMINAL</h2>
-             <input type="number" id="dni" placeholder="OPERATOR ID" style="background:transparent; border:1px solid #333; color:white; padding:15px; width:80%">
-             <div style="display:flex; gap:10px; margin-top:20px">
-                <button onclick="marcarSimulado('ENTRADA')" style="background:var(--dorado); color:black; padding:15px; flex:1; border-radius:10px; cursor:pointer">LOGIN</button>
-                <button onclick="marcarSimulado('SALIDA')" style="background:transparent; border:1px solid #ff0000; color:white; padding:15px; flex:1; border-radius:10px; cursor:pointer">LOGOUT</button>
-             </div>
+        <div id="reloj">00:00:00</div>
+        
+        <div class="card" style="max-width: 450px;">
+            <h2 style="color:var(--dorado); margin-bottom:20px; font-family: 'Orbitron';">TERMINAL DE ACCESO</h2>
+            <input type="number" id="dni" placeholder="DNI BARBERO">
+            <div style="display:flex; gap:10px">
+                <button class="btn-entrada" onclick="marcarSimulado('ENTRADA')">Entrada</button>
+                <button class="btn-salida" onclick="marcarSimulado('SALIDA')">Salida</button>
+            </div>
+            <div id="mensaje-flotante" style="display:none; margin-top:15px; color:var(--verde)"></div>
         </div>
+
+        <div class="admin-panel">
+            <div class="grid-stats">
+                <div class="stat-card"><div>Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
+                <div class="stat-card"><div>Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
+                <div class="stat-card"><div>Gastos</div><div id="box-g" class="stat-val">$0</div></div>
+                <div class="stat-card"><div>Neto Local</div><div id="box-n" class="stat-val" style="color:var(--verde)">$0</div></div>
+            </div>
+            
+            <div class="form-gestion">
+                <div>
+                    <select id="sel-b"><option value="">-- Barbero --</option><option value="JULIÁN">JULIÁN</option><option value="MARCOS">MARCOS</option></select>
+                    <select id="tipo-v"><option value="SERVICIO">SERVICIO (50%)</option><option value="PRODUCTO">PRODUCTO (10%)</option></select>
+                    <input type="number" id="m-v" placeholder="Monto $">
+                    <select id="m-m"><option value="EF">EFECTIVO</option><option value="TR">TRANSFERENCIA</option></select>
+                    <button class="btn-accion" onclick="registrarVenta()">Cargar Venta</button>
+                </div>
+                <div id="res-c" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; font-family: 'Orbitron'; font-size: 0.8rem;">
+                    RESUMEN DE COMISIONES...
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid var(--rojo); padding: 10px 30px; border-radius: 50px; cursor: pointer; margin-top: 20px; font-family: 'Orbitron';">🔴 CERRAR JORNADA</button>
     </div>
 
 <script>
@@ -153,69 +176,88 @@
         if(audioIniciado) return;
         audioIniciado = true;
         ctx.resume();
-        startCinematicSequence();
+        startSequence();
     }
 
-    function startCinematicSequence() {
+    function startSequence() {
         const tl = gsap.timeline();
         
-        // Efecto lente de cámara moviéndose
-        gsap.to("#shutter", { scale: 1.1, duration: 6, ease: "sine.inOut" });
+        // Zoom cinematográfico inicial
+        gsap.to("#shutter", { scale: 1.1, duration: 5, ease: "sine.inOut" });
 
-        tl.to("#status-text", { textContent: "SYSTEM_INITIALIZING...", duration: 1.5, ease: "none" })
+        tl.to("#status-text", { textContent: "BOOTING SYSTEM...", duration: 1 })
           .to("#neon-logo", { 
-            opacity: 1, duration: 0.05, repeat: 15, yoyo: true, 
+            opacity: 1, duration: 0.05, repeat: 14, yoyo: true, 
             onRepeat: () => { 
-                if(Math.random() > 0.4) {
+                if(Math.random() > 0.5) {
                     createSpark();
-                    playSound(50, 'square', 0.04, 0.1);
-                    gsap.set("#shutter", { filter: "brightness(1.3) contrast(1.2) saturate(1.2)" });
-                } else {
-                    gsap.set("#shutter", { filter: "brightness(1) contrast(1) saturate(1)" });
+                    playSound(60, 'square', 0.05, 0.1);
                 }
             } 
           })
-          .to("#status-text", { textContent: "UNLOCKED", color: "#00f2ff", duration: 0.5 })
-          // El movimiento de la persiana ahora es más suave y pesado
           .to("#shutter", { 
-            y: "-110%", duration: 4.5, ease: "power4.inOut",
+            y: "-100%", duration: 3.5, ease: "power4.inOut",
             onStart: () => {
-                playSound(80, 'triangle', 2, 0.05);
+                playSound(100, 'triangle', 1, 0.05);
             }
           })
-          .to("#main-wrapper", { 
-            opacity: 1, filter: "blur(0px)", scale: 1, duration: 2, ease: "power2.out" 
-          }, "-=2.5");
+          .to("#main-wrapper", { opacity: 1, duration: 1.5 }, "-=2.5")
+          .set("#shutter-container", { display: "none" });
     }
 
     function createSpark() {
         const spark = document.createElement('div');
         spark.className = 'spark';
-        const rect = document.getElementById('neon-logo').getBoundingClientRect();
-        spark.style.left = (rect.left + Math.random() * rect.width) + 'px';
-        spark.style.top = (rect.top + Math.random() * rect.height) + 'px';
+        spark.style.left = (window.innerWidth / 2 + (Math.random()-0.5)*200) + 'px';
+        spark.style.top = (window.innerHeight / 2) + 'px';
         document.body.appendChild(spark);
-        gsap.to(spark, { 
-            x: (Math.random()-0.5)*200, y: Math.random()*200 + 100, 
-            opacity: 0, scale: 0, duration: 0.8, onComplete: () => spark.remove() 
-        });
+        gsap.to(spark, { y: 200, opacity: 0, duration: 0.6, onComplete: () => spark.remove() });
     }
 
-    setInterval(() => { 
-        const now = new Date();
-        document.getElementById('reloj').innerText = now.toLocaleTimeString(); 
-    }, 1000);
+    // --- LÓGICA DE NEGOCIO ---
+    let db = { efectivo: 0, tarjeta: 0, barberos: { "JULIÁN": 0, "MARCOS": 0 }, totalComisiones: 0 };
+    const STAFF = { "123": "JULIÁN", "456": "MARCOS" };
 
-    function marcarSimulado(t) { 
-        playSound(440, 'sine', 0.1, 0.05); 
-        Swal.fire({
-            title: 'TERMINAL ACCESS',
-            text: t + ' REGISTERED SUCCESSFULLY',
-            background: '#111',
-            color: '#fff',
-            confirmButtonColor: '#d4af37'
-        }); 
+    function marcarSimulado(tipo) {
+        const dni = document.getElementById('dni').value;
+        const nombre = STAFF[dni];
+        if (!nombre) return Swal.fire('Error', 'DNI Incorrecto', 'error');
+        playSound(440, 'sine', 0.1, 0.1);
+        Swal.fire('Sistema', `${tipo} registrada para ${nombre}`, 'success');
     }
+
+    function registrarVenta() {
+        const m = parseFloat(document.getElementById('m-v').value);
+        const b = document.getElementById('sel-b').value;
+        if (!m || !b) return Swal.fire('Error', 'Completa los datos', 'error');
+        
+        const c = m * (document.getElementById('tipo-v').value === 'PRODUCTO' ? 0.1 : 0.5);
+        if (document.getElementById('m-m').value === 'EF') db.efectivo += m; else db.tarjeta += m;
+        db.barberos[b] += c;
+        db.totalComisiones += c;
+        
+        actualizarUI();
+        playSound(880, 'sine', 0.1, 0.05);
+        document.getElementById('m-v').value = "";
+    }
+
+    function actualizarUI() {
+        document.getElementById('box-e').innerText = `$${db.efectivo}`;
+        document.getElementById('box-t').innerText = `$${db.tarjeta}`;
+        document.getElementById('box-n').innerText = `$${(db.efectivo+db.tarjeta)-db.totalComisiones}`;
+        document.getElementById('res-c').innerHTML = `
+            <b>Comisiones Hoy:</b><br>
+            JULIÁN: $${db.barberos["JULIÁN"]}<br>
+            MARCOS: $${db.barberos["MARCOS"]}
+        `;
+    }
+
+    function cerrarLocal() {
+        document.getElementById("shutter-container").style.display = "flex";
+        gsap.fromTo("#shutter", { y: "-100%" }, { y: "0%", duration: 2, ease: "bounce.out" });
+    }
+
+    setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
 </html>
