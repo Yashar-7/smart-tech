@@ -18,11 +18,10 @@
         #gate-container {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; pointer-events: none;
-            background: rgba(0,0,0,0.3); /* Fondo sutil para resaltar el vidrio */
+            background: rgba(0,0,0,0.3);
         }
         .gate-panel {
             width: 50%; height: 100%;
-            /* Vidrio ahumado con desenfoque */
             background: rgba(44, 62, 80, 0.4); 
             backdrop-filter: blur(25px); 
             -webkit-backdrop-filter: blur(25px);
@@ -31,25 +30,24 @@
             overflow: hidden;
         }
         
-        /* Reflejo diagonal de luz en el vidrio */
         .gate-panel::after {
             content: ""; position: absolute; inset: 0;
             background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-            pointer-events: none;
         }
 
         .gate-left { 
             justify-content: flex-end; 
             border-right: 3px solid var(--naranja);
             box-shadow: 15px 0 40px rgba(0,0,0,0.6);
+            transform: translateX(-100%); /* Empiezan abiertas para el cierre posterior */
         }
         .gate-right { 
             justify-content: flex-start; 
             border-left: 3px solid var(--naranja);
             box-shadow: -15px 0 40px rgba(0,0,0,0.6);
+            transform: translateX(100%); /* Empiezan abiertas */
         }
         
-        /* El logo HONEY neón */
         .gate-logo {
             font-size: 6rem; 
             font-weight: 900; 
@@ -60,7 +58,6 @@
             z-index: 10;
         }
 
-        /* Ajuste de precisión para que las letras se toquen perfectamente */
         .left-text { transform: translateX(2px); } 
         .right-text { transform: translateX(-2px); }
 
@@ -70,6 +67,9 @@
         .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; }
         .btn-scan { background: var(--amarillo); color: black; }
         .btn-save { background: var(--verde); color: white; }
+        .btn-exit { background: transparent; color: var(--rojo); border: 2px solid var(--rojo); margin-top: 20px; transition: 0.3s; }
+        .btn-exit:hover { background: var(--rojo); color: white; }
+        
         h2, h3 { color: var(--amarillo); margin: 5px 0; }
         .tabla-contenedor { overflow-x: auto; margin-top: 10px; background: #1a1a1a; border-radius: 10px; }
         .tabla-inventario { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
@@ -120,16 +120,36 @@
         </div>
     </div>
 
+    <button class="btn btn-exit" onclick="cerrarSistema()">🔴 SALIR DEL SISTEMA</button>
+
 <script>
-    // --- LÓGICA DE APERTURA ---
+    // --- LÓGICA DE APERTURA (Al entrar) ---
     window.addEventListener('load', () => {
         const tl = gsap.timeline();
-        // Las puertas se abren con una curva "Expo" para simular motores eléctricos de supermercado
+        // Ponemos las puertas en el centro primero para que se vea la animación de apertura
+        gsap.set(".gate-left, .gate-right", { x: "0%" });
+        
         tl.to(".gate-left", { x: "-100%", duration: 2, ease: "expo.inOut" }, "+=0.8")
           .to(".gate-right", { x: "100%", duration: 2, ease: "expo.inOut" }, "<")
           .to("#gate-container", { display: "none" });
     });
 
+    // --- LÓGICA DE CIERRE (Al salir) ---
+    function cerrarSistema() {
+        const tl = gsap.timeline();
+        
+        // Hacemos visible el contenedor de nuevo
+        document.getElementById("gate-container").style.display = "flex";
+        
+        tl.to(".gate-left", { x: "0%", duration: 1.5, ease: "expo.inOut" })
+          .to(".gate-right", { x: "0%", duration: 1.5, ease: "expo.inOut" }, "<")
+          .call(() => {
+              // Redirigir al index después de cerrar (cambia 'index.html' por tu ruta real)
+              window.location.href = "index.html"; 
+          });
+    }
+
+    // --- LÓGICA DE DATOS ---
     const SB_URL = "https://svpurpvbiujhcbiugrkh.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2cHVycHZiaXVqaGNiaXVncmtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NDgzMTUsImV4cCI6MjA4MzMyNDMxNX0.AivKJ0_N0z_4T4vLNfUcE2hepJ1XXOO8-4fSA3PJXdc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
