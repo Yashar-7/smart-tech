@@ -3,203 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartBarber Pro - Demo Interactiva</title>
+    <title>SmartBarber Pro - Urban Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     
     <style>
-        :root { --dorado: #d4af37; --verde: #4caf50; --rojo: #f44336; --cyber-blue: #00f2ff; --barber-red: #e74c3c; --barber-blue: #2980b9; }
+        :root { 
+            --dorado: #d4af37; --verde: #4caf50; --rojo: #f44336; 
+            --neon-blue: #00f2ff; --barber-red: #ff0000; --barber-blue: #0055ff;
+        }
         
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-            color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', sans-serif; background: #000;
+            color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden;
         }
 
-        /* --- SISTEMA DE PERSIANA Y BARBER POLE --- */
+        /* --- PERSIANA URBANA REALISTA --- */
         #shutter-container {
             position: fixed; inset: 0; z-index: 9999;
-            background: #111; display: flex; align-items: center; justify-content: center;
+            background: #050505; display: flex; align-items: center; justify-content: center;
         }
+
         .shutter {
             position: absolute; inset: 0;
-            background: repeating-linear-gradient(0deg, #333 0px, #333 40px, #222 41px, #222 45px);
-            border-bottom: 10px solid #444;
+            /* Textura de acero corrugado */
+            background: linear-gradient(to right, #111 0%, #333 10%, #222 20%, #333 30%, #111 40%, #333 50%, #111 60%, #333 70%, #222 80%, #333 90%, #111 100%),
+                        repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 2px, transparent 2px, transparent 40px);
+            background-blend-mode: overlay;
+            border-bottom: 15px solid #111;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+
+        /* Efecto Graffiti */
+        .graffiti {
+            position: absolute; font-family: 'Courier New', Courier, monospace;
+            font-size: 8rem; font-weight: 900; color: rgba(255, 255, 255, 0.05);
+            transform: rotate(-10deg); pointer-events: none; white-space: nowrap;
+        }
+
+        /* Neón del Logo */
+        .neon-text {
+            font-size: 3.5rem; font-weight: bold; color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+            margin-top: 20px; font-family: 'Arial Black', sans-serif;
+            opacity: 0; /* Empieza apagado para el parpadeo */
+        }
+
+        /* Barber Pole Mejorado */
         .pole-container {
-            width: 70px; height: 180px; background: #fff; border: 6px solid #ddd;
+            width: 60px; height: 160px; background: #fff; border: 5px solid #222;
             border-radius: 40px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(255,255,255,0.1), inset 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
         }
         .stripes {
             width: 100%; height: 400px;
-            background: repeating-linear-gradient(45deg, var(--barber-red), var(--barber-red) 20px, #fff 20px, #fff 40px, var(--barber-blue) 40px, var(--barber-blue) 60px, #fff 60px, #fff 80px);
-            animation: moveStripes 2s linear infinite;
+            background: repeating-linear-gradient(45deg, var(--barber-red) 0px, var(--barber-red) 30px, #fff 30px, #fff 60px, var(--barber-blue) 60px, var(--barber-blue) 90px, #fff 90px, #fff 120px);
+            animation: rotate 1.5s linear infinite;
         }
-        @keyframes moveStripes { from { transform: translateY(0); } to { transform: translateY(-80px); } }
-        .pole-cap { position: absolute; width: 90px; height: 25px; background: linear-gradient(to bottom, #bdc3c7, #7f8c8d); left: 50%; transform: translateX(-50%); border-radius: 8px; z-index: 10; }
-        .top-cap { top: -15px; } .bottom-cap { bottom: -15px; }
+        @keyframes rotate { from { transform: translateY(0); } to { transform: translateY(-120px); } }
 
-        /* --- ESTILOS DE TU SISTEMA --- */
-        #reloj { font-size: 2.2rem; font-weight: bold; color: var(--dorado); margin-bottom: 20px; text-shadow: 0 0 15px rgba(212,175,55,0.4); }
-        .demo-badge { background: var(--dorado); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-bottom: 10px; }
-        .card, .admin-panel { background: rgba(30,30,30,0.8); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 25px; border: 1px solid rgba(212,175,55,0.2); width: 100%; box-sizing: border-box; margin-bottom: 20px; }
-        .card { max-width: 400px; text-align: center; }
-        .admin-panel { max-width: 850px; border-color: rgba(0, 242, 255, 0.2); }
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border-bottom: 3px solid var(--dorado); text-align: center; }
-        .stat-val { font-size: 1.4rem; font-weight: bold; color: #fff; }
-        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
-        .form-gestion { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 700px) { .form-gestion { grid-template-columns: 1fr; } }
-        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; }
-        button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
-        .btn-entrada { background: var(--dorado); color: black; }
-        .btn-salida { background: #222; color: white; border: 1px solid var(--rojo); }
-        .btn-accion { background: var(--verde); color: white; }
-        .historial-box { margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; }
-        .hist-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; font-size: 0.8rem; }
-        #mensaje-flotante { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
-        .exito { background: rgba(76, 175, 80, 0.2); border: 1px solid var(--verde); color: #afffaf; }
-        
-        #main-wrapper { opacity: 0; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        /* --- DASHBOARD (TU CONTENIDO) --- */
+        #main-wrapper { opacity: 0; width: 100%; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        .card, .admin-panel { background: rgba(20,20,20,0.9); border: 1px solid rgba(212,175,55,0.3); border-radius: 20px; width: 100%; max-width: 800px; padding: 20px; margin-bottom: 20px; }
+        #reloj { font-size: 2rem; color: var(--dorado); margin: 20px 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="shutter-container">
         <div class="shutter" id="shutter">
-            <div id="pole-wrapper" style="text-align: center;">
-                <div style="position: relative; display: inline-block;">
-                    <div class="pole-cap top-cap"></div>
-                    <div class="pole-container"><div class="stripes"></div></div>
-                    <div class="pole-cap bottom-cap"></div>
+            <div class="graffiti">STREET STYLE</div>
+            
+            <div id="pole-wrapper" style="z-index: 10; text-align: center;">
+                <div class="pole-container" style="margin: 0 auto;">
+                    <div class="stripes"></div>
                 </div>
-                <h1 style="color: var(--dorado); margin-top: 25px; letter-spacing: 4px; font-family: serif;">SMART BARBER</h1>
-                <p style="color: #666; font-size: 0.8rem;">INICIANDO SISTEMA...</p>
+                <div class="neon-text" id="neon-logo">SMART BARBER</div>
+                <p id="status-text" style="color: #555; font-family: monospace; margin-top: 10px;">ESTABLECIENDO CONEXIÓN...</p>
             </div>
         </div>
     </div>
 
     <div id="main-wrapper">
-        <div class="demo-badge">MODO DEMO: SMARTBARBER PRO</div>
         <div id="reloj">00:00:00</div>
-
+        
         <div class="card">
-            <h2 style="color:var(--dorado); margin-bottom:15px">💈 Acceso de Staff</h2>
-            <input type="number" id="dni" placeholder="INGRESE DNI (Ejem: 123)">
-            <div style="display:flex; gap:10px">
-                <button class="btn-entrada" onclick="marcarSimulado('ENTRADA')">Entrada</button>
-                <button class="btn-salida" onclick="marcarSimulado('SALIDA')">Salida</button>
+            <h2 style="color:var(--dorado)">💈 Acceso de Staff</h2>
+            <input type="number" id="dni" placeholder="INGRESE DNI (123 / 456)" style="width: 100%; padding: 15px; background: #000; color: #fff; border: 1px solid #444; border-radius: 10px;">
+            <div style="display:flex; gap:10px; margin-top: 10px;">
+                <button onclick="marcarSimulado('ENTRADA')" style="flex:1; padding: 15px; background: var(--dorado); font-weight: bold; border-radius: 10px;">ENTRADA</button>
+                <button onclick="marcarSimulado('SALIDA')" style="flex:1; padding: 15px; background: #222; color: #fff; border: 1px solid var(--rojo); border-radius: 10px;">SALIDA</button>
             </div>
-            <div id="mensaje-flotante" class="exito"></div>
+            <div id="mensaje-flotante" style="margin-top: 10px; color: var(--verde); display: none;"></div>
         </div>
 
         <div class="admin-panel">
-            <div class="grid-stats">
-                <div class="stat-card" style="border-color:var(--verde)"><div class="stat-label">Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--cyber-blue)"><div class="stat-label">Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--rojo)"><div class="stat-label">Gastos</div><div id="box-g" class="stat-val">$0</div></div>
-                <div class="stat-card" style="border-color:var(--dorado)"><div class="stat-label">Neto Local</div><div id="box-n" class="stat-val">$0</div></div>
-            </div>
-
-            <div class="form-gestion">
-                <div>
-                    <p class="stat-label" style="color: var(--dorado);">Registro de Servicios</p>
-                    <select id="sel-b">
-                        <option value="">-- Barbero en Turno --</option>
-                        <option value="JULIÁN">JULIÁN</option>
-                        <option value="MARCOS">MARCOS</option>
-                    </select>
-                    <select id="tipo-v">
-                        <option value="SERVICIO">CORTE / BARBA (50%)</option>
-                        <option value="PRODUCTO">PRODUCTO (10%)</option>
-                    </select>
-                    <input type="number" id="m-v" placeholder="Monto $">
-                    <select id="m-m">
-                        <option value="EF">EFECTIVO</option>
-                        <option value="TR">TRANSFERENCIA</option>
-                    </select>
-                    <button class="btn-accion" onclick="registrarVenta()">Cargar Venta</button>
-                    
-                    <div class="historial-box">
-                        <p class="stat-label">Últimos Trabajos</p>
-                        <div id="list-v"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <p class="stat-label" style="color: var(--dorado);">Liquidación Staff</p>
-                    <div id="res-c" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; min-height: 100px;">
-                        Inicie sesión para ver comisiones...
-                    </div>
-                    <button style="background: #333; color: #fff; margin-top: 20px;" onclick="alert('Reporte PDF enviado.')">Simular Cierre Diario</button>
-                </div>
-            </div>
+            <h3 style="color: var(--neon-blue)">Panel Administrativo</h3>
+            <p style="color: #888;">Sistema listo para operar.</p>
         </div>
+
+        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid var(--rojo); padding: 10px 30px; border-radius: 50px; cursor: pointer; margin-top: 20px;">
+            🔴 FINALIZAR JORNADA (Cerrar Persiana)
+        </button>
     </div>
 
-    <script>
-        // --- LÓGICA DE ANIMACIÓN INICIAL ---
-        window.addEventListener('load', () => {
-            const tl = gsap.timeline();
-            tl.to("#pole-wrapper", { scale: 1.1, duration: 1.2, ease: "power2.inOut" }, "+=0.5")
-              .to("#pole-wrapper", { opacity: 0, duration: 0.6 })
-              .to("#shutter", { y: "-100%", duration: 1.5, ease: "bounce.out" })
-              .to("#main-wrapper", { opacity: 1, duration: 0.8 }, "-=0.8")
-              .set("#shutter-container", { display: "none" });
-        });
+<script>
+    // --- ANIMACIÓN DE ENTRADA BRUTAL ---
+    window.addEventListener('load', () => {
+        const tl = gsap.timeline();
 
-        // --- TU LÓGICA ORIGINAL ---
-        let db = { efectivo: 0, tarjeta: 0, gastos: 0, totalComisiones: 0, barberos: { "JULIÁN": 0, "MARCOS": 0 }, historial: [] };
-        const STAFF = { "123": "JULIÁN", "456": "MARCOS" };
+        // 1. El Neón parpadea para encenderse
+        tl.to("#neon-logo", { opacity: 1, duration: 0.1, repeat: 5, yoyo: true, ease: "power4.in" }, "+=0.5")
+          .to("#neon-logo", { opacity: 1, textShadow: "0 0 30px #00f2ff", duration: 0.5 })
+          .to("#status-text", { textContent: "SISTEMA ONLINE", color: "#00f2ff", duration: 0.1 })
+          
+        // 2. Pequeño temblor antes de subir (vibración de motor)
+          .to("#shutter", { x: 2, repeat: 10, yoyo: true, duration: 0.05 })
+          
+        // 3. La persiana sube con rebote pesado
+          .to("#shutter", { y: "-100%", duration: 2, ease: "expo.inOut" })
+          .to("#main-wrapper", { opacity: 1, duration: 1 }, "-=1")
+          .set("#shutter-container", { display: "none" });
+    });
 
-        function marcarSimulado(tipo) {
-            const dni = document.getElementById('dni').value;
-            const nombre = STAFF[dni];
-            const msg = document.getElementById('mensaje-flotante');
-            if (!nombre) { Swal.fire('Error', 'DNI no reconocido.', 'error'); return; }
-            msg.style.display = "block";
-            msg.innerText = `${tipo}: ${nombre} - ${new Date().toLocaleTimeString()}`;
-            if (tipo === 'SALIDA') {
-                const comision = db.barberos[nombre] || 0;
-                Swal.fire({ title: `¡Buen descanso, ${nombre}!`, html: `Comisión: <b style="color:#4caf50;">$${comision.toLocaleString()}</b>`, icon: 'success', background: '#1a1a1a', color: '#fff' });
+    // --- FUNCIÓN PARA CERRAR EL LOCAL ---
+    function cerrarLocal() {
+        document.getElementById("shutter-container").style.display = "flex";
+        gsap.fromTo("#shutter", { y: "-100%" }, { 
+            y: "0%", 
+            duration: 1.2, 
+            ease: "bounce.out",
+            onComplete: () => {
+                Swal.fire({
+                    title: 'Local Cerrado',
+                    text: 'Cerrando sesión de Smart Barber...',
+                    icon: 'info',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = "index.html"; 
+                });
             }
-            document.getElementById('dni').value = "";
-            setTimeout(() => msg.style.display = "none", 5000);
-        }
+        });
+    }
 
-        function registrarVenta() {
-            const monto = parseFloat(document.getElementById('m-v').value);
-            const barbero = document.getElementById('sel-b').value;
-            const tipo = document.getElementById('tipo-v').value;
-            const metodo = document.getElementById('m-m').value;
-            if (!monto || !barbero) return Swal.fire('Atención', 'Complete datos', 'warning');
-            const porc = (tipo === 'PRODUCTO') ? 0.10 : 0.50;
-            const comision = monto * porc;
-            if (metodo === 'EF') db.efectivo += monto; else db.tarjeta += monto;
-            db.totalComisiones += comision;
-            db.barberos[barbero] += comision;
-            db.historial.unshift({ desc: `${barbero} (${tipo[0]})`, total: monto, hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            actualizarUI();
-            document.getElementById('m-v').value = "";
-        }
+    // --- TU LÓGICA DE NEGOCIO (Resumida para el ejemplo) ---
+    setInterval(() => {
+        document.getElementById('reloj').innerText = new Date().toLocaleTimeString();
+    }, 1000);
 
-        function actualizarUI() {
-            document.getElementById('box-e').innerText = `$${db.efectivo.toLocaleString()}`;
-            document.getElementById('box-t').innerText = `$${db.tarjeta.toLocaleString()}`;
-            document.getElementById('box-n').innerText = `$${((db.efectivo + db.tarjeta) - db.totalComisiones).toLocaleString()}`;
-            let htmlComisiones = `<b>Total Staff: $${db.totalComisiones.toLocaleString()}</b><br><hr>`;
-            for (let b in db.barberos) { htmlComisiones += `<div class="hist-item"><span>${b}</span> <span>$${db.barberos[b].toLocaleString()}</span></div>`; }
-            document.getElementById('res-c').innerHTML = htmlComisiones;
-            let htmlHist = "";
-            db.historial.slice(0, 5).forEach(h => { htmlHist += `<div class="hist-item"><span>${h.hora} - ${h.desc}</span> <b>$${h.total}</b></div>`; });
-            document.getElementById('list-v').innerHTML = htmlHist;
-        }
-
-        setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
-    </script>
+    const STAFF = { "123": "JULIÁN", "456": "MARCOS" };
+    function marcarSimulado(tipo) {
+        const dni = document.getElementById('dni').value;
+        const nombre = STAFF[dni];
+        if (!nombre) return Swal.fire('Error', 'DNI no encontrado', 'error');
+        
+        Swal.fire({
+            title: tipo,
+            text: `${nombre} registrado correctamente.`,
+            icon: 'success',
+            background: '#111',
+            color: '#fff'
+        });
+        document.getElementById('dni').value = "";
+    }
+</script>
 </body>
 </html>
