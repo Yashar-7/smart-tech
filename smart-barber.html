@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartBarber Pro - Demo Interactiva</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root { --dorado: #d4af37; --verde: #4caf50; --rojo: #f44336; --cyber-blue: #00f2ff; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            color: white; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px;
+        }
+        #reloj { font-size: 2.2rem; font-weight: bold; color: var(--dorado); margin-bottom: 20px; text-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        
+        .demo-badge { background: var(--dorado); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-bottom: 10px; }
+
+        .card, .admin-panel { background: rgba(30,30,30,0.8); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 25px; border: 1px solid rgba(212,175,55,0.2); width: 100%; box-sizing: border-box; margin-bottom: 20px; }
+        .card { max-width: 400px; text-align: center; box-shadow: 0 0 30px rgba(212,175,55,0.1); }
+        .admin-panel { max-width: 850px; border-color: rgba(0, 242, 255, 0.2); }
+        
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border-bottom: 3px solid var(--dorado); text-align: center; }
+        .stat-val { font-size: 1.4rem; font-weight: bold; color: #fff; }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: #aaa; margin-bottom: 5px; }
+        
+        .form-gestion { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .form-gestion { grid-template-columns: 1fr; } }
+        
+        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; }
+        
+        button { border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%; }
+        .btn-entrada { background: var(--dorado); color: black; }
+        .btn-salida { background: #222; color: white; border: 1px solid var(--rojo); }
+        .btn-accion { background: var(--verde); color: white; }
+        
+        .historial-box { margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 12px; padding: 15px; }
+        .hist-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; font-size: 0.8rem; }
+        
+        #mensaje-flotante { display: none; margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; }
+        .exito { background: rgba(76, 175, 80, 0.2); border: 1px solid var(--verde); color: #afffaf; }
+    </style>
+</head>
+<body>
+
+    <div class="demo-badge">MODO DEMO: SMARTBARBER PRO</div>
+    <div id="reloj">00:00:00</div>
+
+    <div class="card">
+        <h2 style="color:var(--dorado); margin-bottom:15px">💈 Acceso de Staff</h2>
+        <input type="number" id="dni" placeholder="INGRESE DNI (Ejem: 123)">
+        <div style="display:flex; gap:10px">
+            <button class="btn-entrada" onclick="marcarSimulado('ENTRADA')">Entrada</button>
+            <button class="btn-salida" onclick="marcarSimulado('SALIDA')">Salida</button>
+        </div>
+        <div id="mensaje-flotante" class="exito"></div>
+    </div>
+
+    <div class="admin-panel">
+        <div class="grid-stats">
+            <div class="stat-card" style="border-color:var(--verde)"><div class="stat-label">Caja Efectivo</div><div id="box-e" class="stat-val">$0</div></div>
+            <div class="stat-card" style="border-color:var(--cyber-blue)"><div class="stat-label">Tarjetas</div><div id="box-t" class="stat-val">$0</div></div>
+            <div class="stat-card" style="border-color:var(--rojo)"><div class="stat-label">Gastos</div><div id="box-g" class="stat-val">$0</div></div>
+            <div class="stat-card" style="border-color:var(--dorado)"><div class="stat-label">Neto Local</div><div id="box-n" class="stat-val">$0</div></div>
+        </div>
+
+        <div class="form-gestion">
+            <div>
+                <p class="stat-label" style="color: var(--dorado);">Registro de Servicios</p>
+                <select id="sel-b">
+                    <option value="">-- Barbero en Turno --</option>
+                    <option value="JULIÁN">JULIÁN</option>
+                    <option value="MARCOS">MARCOS</option>
+                </select>
+                <select id="tipo-v">
+                    <option value="SERVICIO">CORTE / BARBA (50%)</option>
+                    <option value="PRODUCTO">PRODUCTO (10%)</option>
+                </select>
+                <input type="number" id="m-v" placeholder="Monto $">
+                <select id="m-m">
+                    <option value="EF">EFECTIVO</option>
+                    <option value="TR">TRANSFERENCIA</option>
+                </select>
+                <button class="btn-accion" onclick="registrarVenta()">Cargar Venta</button>
+                
+                <div class="historial-box">
+                    <p class="stat-label">Últimos Trabajos</p>
+                    <div id="list-v"></div>
+                </div>
+            </div>
+
+            <div>
+                <p class="stat-label" style="color: var(--dorado);">Liquidación Staff</p>
+                <div id="res-c" style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px; min-height: 100px;">
+                    Inicie sesión para ver comisiones...
+                </div>
+                <button style="background: #333; color: #fff; margin-top: 20px;" onclick="alert('En la versión real, esto envía un reporte PDF por WhatsApp.')">Simular Cierre Diario</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de la Demo
+        let db = { 
+            efectivo: 0, 
+            tarjeta: 0, 
+            gastos: 0, 
+            totalComisiones: 0, 
+            barberos: { "JULIÁN": 0, "MARCOS": 0 }, 
+            historial: [] 
+        };
+
+        const STAFF = {
+            "123": "JULIÁN",
+            "456": "MARCOS"
+        };
+
+        function marcarSimulado(tipo) {
+            const dni = document.getElementById('dni').value;
+            const nombre = STAFF[dni];
+            const msg = document.getElementById('mensaje-flotante');
+
+            if (!nombre) {
+                Swal.fire('Error', 'DNI no reconocido en la base de datos.', 'error');
+                return;
+            }
+
+            msg.style.display = "block";
+            msg.innerText = `${tipo}: ${nombre} - ${new Date().toLocaleTimeString()}`;
+            
+            if (tipo === 'SALIDA') {
+                const comision = db.barberos[nombre] || 0;
+                Swal.fire({
+                    title: `¡Buen descanso, ${nombre}!`,
+                    html: `Comisión acumulada hoy: <b style="color:#4caf50; font-size: 24px;">$${comision.toLocaleString()}</b>`,
+                    icon: 'success',
+                    background: '#1a1a1a',
+                    color: '#fff'
+                });
+            }
+            
+            document.getElementById('dni').value = "";
+            setTimeout(() => msg.style.display = "none", 5000);
+        }
+
+        function registrarVenta() {
+            const monto = parseFloat(document.getElementById('m-v').value);
+            const barbero = document.getElementById('sel-b').value;
+            const tipo = document.getElementById('tipo-v').value;
+            const metodo = document.getElementById('m-m').value;
+
+            if (!monto || !barbero) return Swal.fire('Atención', 'Complete monto y barbero', 'warning');
+
+            // Lógica
+            const porc = (tipo === 'PRODUCTO') ? 0.10 : 0.50;
+            const comision = monto * porc;
+
+            if (metodo === 'EF') db.efectivo += monto;
+            else db.tarjeta += monto;
+
+            db.totalComisiones += comision;
+            db.barberos[barbero] += comision;
+            
+            db.historial.unshift({
+                desc: `${barbero} (${tipo[0]})`,
+                total: monto,
+                hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            });
+
+            actualizarUI();
+            document.getElementById('m-v').value = "";
+        }
+
+        function actualizarUI() {
+            document.getElementById('box-e').innerText = `$${db.efectivo.toLocaleString()}`;
+            document.getElementById('box-t').innerText = `$${db.tarjeta.toLocaleString()}`;
+            document.getElementById('box-n').innerText = `$${((db.efectivo + db.tarjeta) - db.totalComisiones).toLocaleString()}`;
+            
+            let htmlComisiones = `<b>Total Staff: $${db.totalComisiones.toLocaleString()}</b><br><hr>`;
+            for (let b in db.barberos) {
+                htmlComisiones += `<div class="hist-item"><span>${b}</span> <span>$${db.barberos[b].toLocaleString()}</span></div>`;
+            }
+            document.getElementById('res-c').innerHTML = htmlComisiones;
+
+            let htmlHist = "";
+            db.historial.slice(0, 5).forEach(h => {
+                htmlHist += `<div class="hist-item"><span>${h.hora} - ${h.desc}</span> <b>$${h.total}</b></div>`;
+            });
+            document.getElementById('list-v').innerHTML = htmlHist;
+        }
+
+        setInterval(() => {
+            document.getElementById('reloj').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+    </script>
+</body>
+</html>
