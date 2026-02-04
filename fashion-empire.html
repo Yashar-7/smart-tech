@@ -29,67 +29,81 @@
             z-index: 10002; top: -10px; pointer-events: none;
         }
 
-        /* --- THEATER INTRO --- */
-        #intro-stage { position: fixed; inset: 0; z-index: 9999; display: flex; cursor: pointer; }
-        .curtain { flex: 1; height: 100%; background: linear-gradient(to bottom, #30060a, var(--imperial)); box-shadow: inset 0 0 100px #000; display: flex; align-items: center; position: relative; }
+        /* --- THEATER INTRO RESPONSIVO --- */
+        #intro-stage { position: fixed; inset: 0; z-index: 9999; display: flex; cursor: pointer; overflow: hidden; }
+        .curtain { flex: 1; height: 100%; background: linear-gradient(to bottom, #30060a, var(--imperial)); box-shadow: inset 0 0 100px #000; display: flex; align-items: center; position: relative; transition: 0.5s; }
         .left-c { justify-content: flex-end; border-right: 1px solid var(--oro); }
         .right-c { justify-content: flex-start; border-left: 1px solid var(--oro); }
 
-        /* AJUSTE FINAL PARA QUE SE LEA EL NOMBRE */
         .giant-label {
-            font-family: 'Playfair Display'; color: var(--oro); font-size: 3.5rem; letter-spacing: 5px;
-            position: absolute; pointer-events: none; white-space: nowrap; z-index: 10001;
+            font-family: 'Playfair Display'; color: var(--oro); 
+            font-size: clamp(1.8rem, 8vw, 4rem); /* Ajuste automático de tamaño */
+            letter-spacing: 5px; position: absolute; pointer-events: none; white-space: nowrap; z-index: 10001;
         }
-        .left-c .giant-label { right: 15px; } /* Espaciado desde el borde derecho de la cortina izquierda */
-        .right-c .giant-label { left: 15px; } /* Espaciado desde el borde izquierdo de la cortina derecha */
+        .left-c .giant-label { right: 10px; }
+        .right-c .giant-label { left: 10px; }
 
-        /* --- MAIN INTERFACE --- */
+        /* --- MAIN INTERFACE GRID RESPONSIVO --- */
         #admin-hub {
-            position: relative; z-index: 10; padding: 25px; visibility: hidden; opacity: 0;
-            max-width: 1600px; margin: auto; display: grid;
-            grid-template-columns: 400px 1fr; gap: 30px; transform: translateY(50px);
+            position: relative; z-index: 10; padding: 15px; visibility: hidden; opacity: 0;
+            max-width: 1400px; margin: auto; display: grid;
+            /* Una columna en móvil, dos en escritorio */
+            grid-template-columns: 1fr; gap: 20px; transform: translateY(30px);
+        }
+
+        @media (min-width: 1100px) {
+            #admin-hub { grid-template-columns: 380px 1fr; padding: 30px; }
         }
 
         .panel-luxury {
             background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 20px; padding: 30px; backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,1);
+            border-radius: 20px; padding: 25px; backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,1); box-sizing: border-box;
         }
 
-        .btn-close-system {
-            background: rgba(99, 13, 22, 0.2); border: 1px solid var(--imperial); color: #ff4d4d;
-            padding: 10px; border-radius: 8px; cursor: pointer;
-            font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2px;
-            margin-bottom: 25px; transition: 0.3s; width: 100%; text-align: center;
-            display: block; box-shadow: 0 0 15px rgba(99, 13, 22, 0.3);
-        }
-        .btn-close-system:hover { background: var(--imperial); color: white; box-shadow: 0 0 20px var(--imperial); }
-
+        /* --- INPUTS "FAT FINGER" PARA MÓVIL --- */
         .hologram-input {
             background: rgba(255,255,255,0.03); border: 1px solid #333; color: white;
-            padding: 12px; margin-bottom: 15px; width: 100%; box-sizing: border-box;
-            font-family: 'Orbitron'; font-size: 0.75rem; border-radius: 8px; transition: 0.3s;
+            padding: 14px; margin-bottom: 12px; width: 100%; box-sizing: border-box;
+            font-family: 'Orbitron'; font-size: 16px; /* Evita zoom automático en iOS */
+            border-radius: 8px; transition: 0.3s;
         }
         .hologram-input:focus { border-color: var(--neon-blue); background: rgba(0, 242, 255, 0.05); outline: none; }
 
         .btn-scan-action {
             background: var(--imperial); border: 1px solid var(--oro); color: #fff;
-            padding: 20px; width: 100%; cursor: pointer; font-family: 'Orbitron';
-            font-weight: bold; letter-spacing: 3px; border-radius: 10px;
+            padding: 18px; width: 100%; cursor: pointer; font-family: 'Orbitron';
+            font-weight: bold; letter-spacing: 2px; border-radius: 10px; text-transform: uppercase;
         }
-        .btn-scan-action:hover { background: var(--oro); color: #000; box-shadow: 0 0 30px var(--oro); }
 
-        /* --- STATS --- */
-        .stat-card { text-align: center; border-top: 3px solid var(--oro); }
-        .stat-val { font-size: 2rem; font-weight: 700; font-family: 'Orbitron'; margin-top: 10px; }
+        /* --- STATS GRID --- */
+        .stats-container {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 15px; margin-bottom: 20px;
+        }
+
+        .stat-card { text-align: center; border-top: 3px solid var(--oro); padding: 15px; }
+        .stat-val { font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 700; font-family: 'Orbitron'; margin-top: 8px; }
+
+        /* --- TABLA RESPONSIVA --- */
+        .table-container { 
+            max-height: 500px; overflow-y: auto; margin-top: 15px;
+            scrollbar-width: thin; scrollbar-color: var(--oro) transparent;
+        }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.65rem; padding: 15px; text-align: left; border-bottom: 1px solid #333; }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.6rem; padding: 12px 8px; text-align: left; border-bottom: 1px solid #333; }
+        td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; }
 
-        .badge-stock { padding: 4px 10px; border-radius: 20px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.7rem; }
+        .btn-close-system {
+            background: rgba(99, 13, 22, 0.2); border: 1px solid var(--imperial); color: #ff4d4d;
+            padding: 12px; border-radius: 8px; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2px;
+            margin-bottom: 20px; width: 100%; transition: 0.3s;
+        }
 
-        @media (max-width: 1100px) { #admin-hub { grid-template-columns: 1fr; } .giant-label { font-size: 2rem; } }
+        .badge-stock { padding: 4px 8px; border-radius: 20px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.6rem; white-space: nowrap; }
     </style>
 </head>
 <body onclick="abrirEcosistema()">
@@ -103,63 +117,56 @@
         <div class="curtain right-c">
             <h1 class="giant-label">EMPIRE</h1>
         </div>
-        <div id="click-prompt" style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:8px; font-size:0.6rem; opacity:0.6; z-index: 10002;">SMART TECH OS v2.0 // CLIC PARA GESTIONAR</div>
+        <div id="click-prompt" style="position:absolute; bottom:10%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:5px; font-size:0.55rem; opacity:0.8; z-index: 10002; padding: 0 20px; box-sizing: border-box;">SMART TECH // TOUCH TO MANAGE</div>
     </div>
 
     <div id="admin-hub">
         <aside>
             <div class="panel-luxury">
-                <button class="btn-close-system" onclick="cerrarEcosistema(event)">TERMINAR SESIÓN / CERRAR</button>
-
-                <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue); margin-bottom:5px; letter-spacing:2px">CORE SCANNER ACTIVE</div>
-                <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 25px 0; font-size:1.8rem">NUEVA PRENDA</h2>
+                <button class="btn-close-system" onclick="cerrarEcosistema(event)">CERRAR SISTEMA</button>
+                <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--neon-blue); margin-bottom:5px;">CORE SCANNER v2.1</div>
+                <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 20px 0; font-size:1.6rem">NUEVA PRENDA</h2>
                 
-                <input type="text" id="nom" class="hologram-input" placeholder="NOMBRE DEL DISEÑO">
-                <div style="display:flex; gap:10px">
+                <input type="text" id="nom" class="hologram-input" placeholder="DISEÑO">
+                <div style="display:flex; gap:8px">
                     <input type="text" id="talle" class="hologram-input" placeholder="TALLE">
                     <input type="text" id="color" class="hologram-input" placeholder="COLOR">
                 </div>
-                <div style="display:flex; gap:10px">
-                    <div style="flex:1">
-                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">COSTO</label>
-                        <input type="number" id="cos" class="hologram-input" placeholder="0.00">
-                    </div>
-                    <div style="flex:1">
-                        <label style="font-size:0.6rem; color:var(--oro); font-family:'Orbitron'">VENTA</label>
-                        <input type="number" id="pre" class="hologram-input" placeholder="0.00">
-                    </div>
+                <div style="display:flex; gap:8px">
+                    <input type="number" id="cos" class="hologram-input" placeholder="COSTO $">
+                    <input type="number" id="pre" class="hologram-input" placeholder="VENTA $">
                 </div>
-                <div style="display:flex; gap:10px; margin-bottom:10px">
+                <div style="display:flex; gap:8px">
                     <input type="number" id="sto" class="hologram-input" placeholder="STOCK">
                     <input type="text" id="cod" class="hologram-input" placeholder="SKU">
                 </div>
-                <button class="btn-scan-action" onclick="procesarRegistro()">EJECUTAR ESCÁNER LÁSER</button>
+                <button class="btn-scan-action" onclick="procesarRegistro()">EJECUTAR ESCÁNER</button>
             </div>
 
-            <div class="panel-luxury" style="margin-top:20px; padding:20px; height: 250px;">
+            <div class="panel-luxury" style="margin-top:20px; padding:15px; height: 220px;">
                 <canvas id="graficoVentasMini"></canvas>
             </div>
         </aside>
 
         <main>
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:25px; margin-bottom:30px">
+            <div class="stats-container">
                 <div class="panel-luxury stat-card">
-                    <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--oro)">CAPITAL EN INVENTARIO</div>
+                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--oro)">CAPITAL</div>
                     <div id="capInvertido" class="stat-val">$0</div>
                 </div>
                 <div class="panel-luxury stat-card" style="border-top-color: var(--verde)">
-                    <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--verde)">VENTAS HOY</div>
+                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--verde)">VENTAS HOY</div>
                     <div id="ventasDia" class="stat-val" style="color:var(--verde)">$0</div>
                 </div>
                 <div class="panel-luxury stat-card" style="border-top-color: var(--neon-blue)">
-                    <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue)">MÓDULO DE GESTIÓN</div>
-                    <div class="stat-val" style="font-size:1.2rem; margin-top:18px">FASHION EMPIRE</div>
+                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--neon-blue)">STATUS</div>
+                    <div class="stat-val" style="font-size:0.9rem; margin-top:12px">ACTIVE OS</div>
                 </div>
             </div>
 
             <div class="panel-luxury">
-                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:2px">INVENTARIO ESTRATÉGICO</h3>
-                <div style="max-height:600px; overflow-y:auto; margin-top:15px">
+                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:1px; font-size: 1.2rem;">INVENTARIO ESTRATÉGICO</h3>
+                <div class="table-container">
                     <table id="tablaEmpire">
                         <thead>
                             <tr><th>DISEÑO</th><th style="text-align:center">STOCK</th><th style="text-align:right">PVP</th></tr>
@@ -184,12 +191,12 @@
         sistemaAbierto = true;
 
         const tl = gsap.timeline();
-        tl.to(".giant-label", { opacity: 0, duration: 0.5, ease: "power1.in" })
-          .to(".left-c", { x: "-100%", duration: 2, ease: "power4.inOut" }, "-=0.3")
-          .to(".right-c", { x: "100%", duration: 2, ease: "power4.inOut" }, "-=2")
-          .to("#click-prompt", { opacity: 0, duration: 0.5 }, "-=2")
+        tl.to(".giant-label", { opacity: 0, duration: 0.4 })
+          .to(".left-c", { x: "-100%", duration: 1.5, ease: "power4.inOut" }, "-=0.2")
+          .to(".right-c", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "-=1.5")
+          .to("#click-prompt", { opacity: 0, duration: 0.3 }, "-=1.5")
           .set("#admin-hub", { visibility: "visible" })
-          .to("#admin-hub", { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "-=1")
+          .to("#admin-hub", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
           .set("#intro-stage", { pointerEvents: "none" });
 
         cargarDatosReales();
@@ -198,13 +205,11 @@
     function cerrarEcosistema(e) {
         if(e) e.stopPropagation(); 
         const tl = gsap.timeline();
-        
-        tl.to("#admin-hub", { opacity: 0, y: 50, duration: 0.8, ease: "power2.in" })
-          .set("#intro-stage", { display: "flex", pointerEvents: "auto" })
-          .to(".left-c", { x: "0%", duration: 2, ease: "power4.inOut" })
-          .to(".right-c", { x: "0%", duration: 2, ease: "power4.inOut" }, "-=2")
-          .to(".giant-label", { opacity: 1, duration: 1 }, "-=1")
-          .to("#click-prompt", { opacity: 0.6, duration: 1 }, "-=1")
+        tl.to("#admin-hub", { opacity: 0, y: 30, duration: 0.5 })
+          .set("#intro-stage", { pointerEvents: "auto" })
+          .to(".left-c", { x: "0%", duration: 1.5, ease: "power4.inOut" })
+          .to(".right-c", { x: "0%", duration: 1.5, ease: "power4.inOut" }, "-=1.5")
+          .to(".giant-label", { opacity: 1, duration: 0.8 }, "-=0.5")
           .add(() => {
               sistemaAbierto = false;
               document.getElementById('admin-hub').style.visibility = "hidden";
@@ -213,11 +218,9 @@
 
     async function procesarRegistro() {
         const nom = document.getElementById('nom').value;
-        if(!nom) return Swal.fire('Error', 'Nombre de prenda requerido', 'warning');
+        if(!nom) return Swal.fire('Error', 'Datos incompletos', 'warning');
 
-        gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 1, ease: "none", onComplete: () => {
-            gsap.set("#scanner-bar", { top: "-10px" });
-        }});
+        gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 1 });
 
         const datos = {
             nombre: nom,
@@ -233,6 +236,8 @@
         if(!error) {
             Swal.fire({ title: 'Sincronizado', icon: 'success', background: '#0a0a0a', color: '#d4af37' });
             cargarDatosReales();
+            // Limpiar campos
+            ['nom','talle','color','cos','pre','sto','cod'].forEach(id => document.getElementById(id).value = "");
         }
     }
 
@@ -242,20 +247,22 @@
 
         const tbody = document.getElementById('cuerpoTabla');
         let totalCap = 0;
-        tbody.innerHTML = productos.map(p => {
-            totalCap += (p.precio_costo * p.stock);
-            return `<tr>
-                <td><b style="color:var(--oro)">${p.nombre}</b><br><small style="color:#666">${p.talle} | ${p.color}</small></td>
-                <td style="text-align:center"><span class="badge-stock" style="color:${p.stock <= 2 ? '#ff4444' : '#2ecc71'}">${p.stock} UNI</span></td>
-                <td style="text-align:right; font-weight:bold">$${p.precio_venta.toLocaleString()}</td>
-            </tr>`;
-        }).join('');
+        if(productos) {
+            tbody.innerHTML = productos.map(p => {
+                totalCap += (p.precio_costo * p.stock);
+                return `<tr>
+                    <td><b style="color:var(--oro)">${p.nombre}</b><br><small style="color:#888">${p.talle} | ${p.color}</small></td>
+                    <td style="text-align:center"><span class="badge-stock" style="color:${p.stock <= 2 ? '#ff4444' : '#2ecc71'}">${p.stock} U</span></td>
+                    <td style="text-align:right; font-weight:bold">$${p.precio_venta.toLocaleString()}</td>
+                </tr>`;
+            }).join('');
+        }
         
         document.getElementById('capInvertido').innerText = `$${totalCap.toLocaleString()}`;
         const hoy = new Date().toISOString().split('T')[0];
-        const sumaHoy = ventas.filter(v => v.created_at.startsWith(hoy)).reduce((acc, v) => acc + v.total, 0);
+        const sumaHoy = ventas ? ventas.filter(v => v.created_at.startsWith(hoy)).reduce((acc, v) => acc + v.total, 0) : 0;
         document.getElementById('ventasDia').innerText = `$${sumaHoy.toLocaleString()}`;
-        actualizarGrafico(ventas);
+        if(ventas) actualizarGrafico(ventas);
     }
 
     function actualizarGrafico(ventas) {
@@ -267,9 +274,9 @@
             type: 'line',
             data: {
                 labels: ['D','L','M','M','J','V','S'],
-                datasets: [{ label: 'Ventas', data: montos, borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.1)', fill: true, tension: 0.4 }]
+                datasets: [{ data: montos, borderColor: '#d4af37', backgroundColor: 'rgba(212, 175, 55, 0.1)', fill: true, tension: 0.4 }]
             },
-            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#222' } }, x: { grid: { display: false } } } }
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#666', font: { size: 9 } } } } }
         });
     }
 </script>
