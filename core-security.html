@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CORE Security | Neural Firewall</title>
+    <title>CORE Security | Smart Tech</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -133,7 +133,7 @@
     <script>
         lucide.createIcons();
 
-        // MATRIX MOBILE (Reducido para rendimiento)
+        // MATRIX CANVAS CONFIG
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -176,10 +176,7 @@
             "Monitoreando flujo Gestión Honey...",
             "Escaneo de Barber_Access completado.",
             "Firewall Neural: Nivel óptimo.",
-            "AES-256 Handshake: Exitoso.",
-            "Bloqueado intento de IP: 192.x.x.x",
             "Sincronizando DB central...",
-            "Protocolo Smart_Barber verificado.",
             "Buscando intrusos... Limpio."
         ];
 
@@ -200,12 +197,18 @@
             }, 2500);
         }
 
+        // --- FUNCIÓN DE SALIDA ACTUALIZADA ---
         function terminateSession() {
             gsap.to("body", { 
                 opacity: 0, 
-                scale: 1.05, 
-                duration: 0.5, 
-                onComplete: () => { window.location.reload(); } 
+                filter: "blur(20px)",
+                scale: 0.95, 
+                duration: 0.8, 
+                ease: "power2.in",
+                onComplete: () => { 
+                    // Redirección al index central de Smart Tech
+                    window.location.href = "index.html"; 
+                } 
             });
         }
     </script>
