@@ -29,7 +29,7 @@
             z-index: 10002; top: -10px; pointer-events: none;
         }
 
-        /* --- THEATER INTRO RESPONSIVO --- */
+        /* --- THEATER INTRO --- */
         #intro-stage { position: fixed; inset: 0; z-index: 9999; display: flex; cursor: pointer; overflow: hidden; }
         .curtain { flex: 1; height: 100%; background: linear-gradient(to bottom, #30060a, var(--imperial)); box-shadow: inset 0 0 100px #000; display: flex; align-items: center; position: relative; transition: 0.5s; }
         .left-c { justify-content: flex-end; border-right: 1px solid var(--oro); }
@@ -37,73 +37,77 @@
 
         .giant-label {
             font-family: 'Playfair Display'; color: var(--oro); 
-            font-size: clamp(1.8rem, 8vw, 4rem); /* Ajuste automático de tamaño */
-            letter-spacing: 5px; position: absolute; pointer-events: none; white-space: nowrap; z-index: 10001;
+            font-size: clamp(1.2rem, 8vw, 4rem);
+            letter-spacing: 3px; position: absolute; pointer-events: none; white-space: nowrap; z-index: 10001;
         }
-        .left-c .giant-label { right: 10px; }
-        .right-c .giant-label { left: 10px; }
+        .left-c .giant-label { right: 5px; }
+        .right-c .giant-label { left: 5px; }
 
-        /* --- MAIN INTERFACE GRID RESPONSIVO --- */
+        /* --- MAIN INTERFACE GRID --- */
         #admin-hub {
-            position: relative; z-index: 10; padding: 15px; visibility: hidden; opacity: 0;
+            position: relative; z-index: 10; padding: 10px; visibility: hidden; opacity: 0;
             max-width: 1400px; margin: auto; display: grid;
-            /* Una columna en móvil, dos en escritorio */
-            grid-template-columns: 1fr; gap: 20px; transform: translateY(30px);
+            grid-template-columns: 1fr; gap: 15px; transform: translateY(20px);
         }
 
         @media (min-width: 1100px) {
-            #admin-hub { grid-template-columns: 380px 1fr; padding: 30px; }
+            #admin-hub { grid-template-columns: 380px 1fr; padding: 30px; gap: 25px; }
         }
 
         .panel-luxury {
             background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 20px; padding: 25px; backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,1); box-sizing: border-box;
+            border-radius: 15px; padding: 20px; backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box;
         }
 
-        /* --- INPUTS "FAT FINGER" PARA MÓVIL --- */
+        /* --- INPUTS RESPONSIVOS --- */
         .hologram-input {
             background: rgba(255,255,255,0.03); border: 1px solid #333; color: white;
-            padding: 14px; margin-bottom: 12px; width: 100%; box-sizing: border-box;
-            font-family: 'Orbitron'; font-size: 16px; /* Evita zoom automático en iOS */
+            padding: 12px; margin-bottom: 10px; width: 100%; box-sizing: border-box;
+            font-family: 'Orbitron'; font-size: 14px; 
             border-radius: 8px; transition: 0.3s;
         }
         .hologram-input:focus { border-color: var(--neon-blue); background: rgba(0, 242, 255, 0.05); outline: none; }
 
         .btn-scan-action {
             background: var(--imperial); border: 1px solid var(--oro); color: #fff;
-            padding: 18px; width: 100%; cursor: pointer; font-family: 'Orbitron';
-            font-weight: bold; letter-spacing: 2px; border-radius: 10px; text-transform: uppercase;
+            padding: 16px; width: 100%; cursor: pointer; font-family: 'Orbitron';
+            font-weight: bold; letter-spacing: 1px; border-radius: 10px; text-transform: uppercase;
+            font-size: 0.8rem; margin-top: 10px;
         }
 
         /* --- STATS GRID --- */
         .stats-container {
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 15px; margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+            gap: 10px; margin-bottom: 15px;
+        }
+        
+        @media (min-width: 600px) {
+            .stats-container { grid-template-columns: repeat(3, 1fr); }
         }
 
-        .stat-card { text-align: center; border-top: 3px solid var(--oro); padding: 15px; }
-        .stat-val { font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 700; font-family: 'Orbitron'; margin-top: 8px; }
+        .stat-card { text-align: center; border-top: 2px solid var(--oro); padding: 12px; }
+        .stat-val { font-size: 1.1rem; font-weight: 700; font-family: 'Orbitron'; margin-top: 5px; }
 
         /* --- TABLA RESPONSIVA --- */
         .table-container { 
-            max-height: 500px; overflow-y: auto; margin-top: 15px;
-            scrollbar-width: thin; scrollbar-color: var(--oro) transparent;
+            max-height: 400px; overflow-y: auto; margin-top: 15px;
+            width: 100%;
         }
         
         table { width: 100%; border-collapse: collapse; }
-        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.6rem; padding: 12px 8px; text-align: left; border-bottom: 1px solid #333; }
-        td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; }
+        th { font-family: 'Orbitron'; color: var(--oro); font-size: 0.55rem; padding: 10px 5px; text-align: left; border-bottom: 1px solid #333; }
+        td { padding: 10px 5px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; }
 
         .btn-close-system {
-            background: rgba(99, 13, 22, 0.2); border: 1px solid var(--imperial); color: #ff4d4d;
-            padding: 12px; border-radius: 8px; cursor: pointer;
-            font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2px;
-            margin-bottom: 20px; width: 100%; transition: 0.3s;
+            background: rgba(99, 13, 22, 0.4); border: 1px solid var(--imperial); color: #ff4d4d;
+            padding: 10px; border-radius: 8px; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.55rem; letter-spacing: 1px;
+            margin-bottom: 15px; width: 100%; transition: 0.3s;
         }
 
-        .badge-stock { padding: 4px 8px; border-radius: 20px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.6rem; white-space: nowrap; }
+        .badge-stock { padding: 2px 6px; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; font-size: 0.6rem; }
     </style>
 </head>
 <body onclick="abrirEcosistema()">
@@ -117,33 +121,33 @@
         <div class="curtain right-c">
             <h1 class="giant-label">EMPIRE</h1>
         </div>
-        <div id="click-prompt" style="position:absolute; bottom:10%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:5px; font-size:0.55rem; opacity:0.8; z-index: 10002; padding: 0 20px; box-sizing: border-box;">SMART TECH // TOUCH TO MANAGE</div>
+        <div id="click-prompt" style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:3px; font-size:0.5rem; opacity:0.8; z-index: 10002; padding: 0 20px; box-sizing: border-box;">TOUCH TO ACCESS SYSTEM</div>
     </div>
 
     <div id="admin-hub">
         <aside>
             <div class="panel-luxury">
                 <button class="btn-close-system" onclick="cerrarEcosistema(event)">CERRAR SISTEMA</button>
-                <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--neon-blue); margin-bottom:5px;">CORE SCANNER v2.1</div>
-                <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 20px 0; font-size:1.6rem">NUEVA PRENDA</h2>
+                <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--neon-blue); margin-bottom:5px;">CORE SCANNER v2.1</div>
+                <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 15px 0; font-size:1.4rem">REGISTRO</h2>
                 
                 <input type="text" id="nom" class="hologram-input" placeholder="DISEÑO">
-                <div style="display:flex; gap:8px">
-                    <input type="text" id="talle" class="hologram-input" placeholder="TALLE">
-                    <input type="text" id="color" class="hologram-input" placeholder="COLOR">
+                <div style="display:flex; gap:5px">
+                    <input type="text" id="talle" class="hologram-input" placeholder="T">
+                    <input type="text" id="color" class="hologram-input" placeholder="COL">
                 </div>
-                <div style="display:flex; gap:8px">
-                    <input type="number" id="cos" class="hologram-input" placeholder="COSTO $">
-                    <input type="number" id="pre" class="hologram-input" placeholder="VENTA $">
+                <div style="display:flex; gap:5px">
+                    <input type="number" id="cos" class="hologram-input" placeholder="COSTO">
+                    <input type="number" id="pre" class="hologram-input" placeholder="VENTA">
                 </div>
-                <div style="display:flex; gap:8px">
+                <div style="display:flex; gap:5px">
                     <input type="number" id="sto" class="hologram-input" placeholder="STOCK">
                     <input type="text" id="cod" class="hologram-input" placeholder="SKU">
                 </div>
-                <button class="btn-scan-action" onclick="procesarRegistro()">EJECUTAR ESCÁNER</button>
+                <button class="btn-scan-action" onclick="procesarRegistro()">EJECUTAR REGISTRO</button>
             </div>
 
-            <div class="panel-luxury" style="margin-top:20px; padding:15px; height: 220px;">
+            <div class="panel-luxury" style="margin-top:15px; padding:10px; height: 180px;">
                 <canvas id="graficoVentasMini"></canvas>
             </div>
         </aside>
@@ -151,25 +155,25 @@
         <main>
             <div class="stats-container">
                 <div class="panel-luxury stat-card">
-                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--oro)">CAPITAL</div>
+                    <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--oro)">CAPITAL</div>
                     <div id="capInvertido" class="stat-val">$0</div>
                 </div>
                 <div class="panel-luxury stat-card" style="border-top-color: var(--verde)">
-                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--verde)">VENTAS HOY</div>
+                    <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--verde)">HOY</div>
                     <div id="ventasDia" class="stat-val" style="color:var(--verde)">$0</div>
                 </div>
-                <div class="panel-luxury stat-card" style="border-top-color: var(--neon-blue)">
-                    <div style="font-family:'Orbitron'; font-size:0.55rem; color:var(--neon-blue)">STATUS</div>
-                    <div class="stat-val" style="font-size:0.9rem; margin-top:12px">ACTIVE OS</div>
+                <div class="panel-luxury stat-card" style="border-top-color: var(--neon-blue); display: none;" id="status-card-desktop">
+                    <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--neon-blue)">STATUS</div>
+                    <div class="stat-val" style="font-size:0.7rem; margin-top:8px">ACTIVE</div>
                 </div>
             </div>
 
             <div class="panel-luxury">
-                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:1px; font-size: 1.2rem;">INVENTARIO ESTRATÉGICO</h3>
+                <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:1px; font-size: 1.1rem;">INVENTARIO</h3>
                 <div class="table-container">
                     <table id="tablaEmpire">
                         <thead>
-                            <tr><th>DISEÑO</th><th style="text-align:center">STOCK</th><th style="text-align:right">PVP</th></tr>
+                            <tr><th>DISEÑO</th><th style="text-align:center">STK</th><th style="text-align:right">PVP</th></tr>
                         </thead>
                         <tbody id="cuerpoTabla"></tbody>
                     </table>
@@ -191,12 +195,12 @@
         sistemaAbierto = true;
 
         const tl = gsap.timeline();
-        tl.to(".giant-label", { opacity: 0, duration: 0.4 })
-          .to(".left-c", { x: "-100%", duration: 1.5, ease: "power4.inOut" }, "-=0.2")
-          .to(".right-c", { x: "100%", duration: 1.5, ease: "power4.inOut" }, "-=1.5")
-          .to("#click-prompt", { opacity: 0, duration: 0.3 }, "-=1.5")
+        tl.to(".giant-label", { opacity: 0, duration: 0.3 })
+          .to(".left-c", { x: "-100%", duration: 1.2, ease: "power3.inOut" }, "-=0.1")
+          .to(".right-c", { x: "100%", duration: 1.2, ease: "power3.inOut" }, "-=1.2")
+          .to("#click-prompt", { opacity: 0, duration: 0.2 }, "-=1.2")
           .set("#admin-hub", { visibility: "visible" })
-          .to("#admin-hub", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
+          .to("#admin-hub", { opacity: 1, y: 0, duration: 0.6 }, "-=0.3")
           .set("#intro-stage", { pointerEvents: "none" });
 
         cargarDatosReales();
@@ -205,11 +209,11 @@
     function cerrarEcosistema(e) {
         if(e) e.stopPropagation(); 
         const tl = gsap.timeline();
-        tl.to("#admin-hub", { opacity: 0, y: 30, duration: 0.5 })
+        tl.to("#admin-hub", { opacity: 0, y: 20, duration: 0.4 })
           .set("#intro-stage", { pointerEvents: "auto" })
-          .to(".left-c", { x: "0%", duration: 1.5, ease: "power4.inOut" })
-          .to(".right-c", { x: "0%", duration: 1.5, ease: "power4.inOut" }, "-=1.5")
-          .to(".giant-label", { opacity: 1, duration: 0.8 }, "-=0.5")
+          .to(".left-c", { x: "0%", duration: 1.2, ease: "power3.inOut" })
+          .to(".right-c", { x: "0%", duration: 1.2, ease: "power3.inOut" }, "-=1.2")
+          .to(".giant-label", { opacity: 1, duration: 0.6 }, "-=0.4")
           .add(() => {
               sistemaAbierto = false;
               document.getElementById('admin-hub').style.visibility = "hidden";
@@ -218,9 +222,9 @@
 
     async function procesarRegistro() {
         const nom = document.getElementById('nom').value;
-        if(!nom) return Swal.fire('Error', 'Datos incompletos', 'warning');
+        if(!nom) return Swal.fire('Error', 'Nombre requerido', 'warning');
 
-        gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 1 });
+        gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 0.8 });
 
         const datos = {
             nombre: nom,
@@ -234,9 +238,8 @@
 
         const { error } = await _supabase.from('productos_boutique').upsert(datos);
         if(!error) {
-            Swal.fire({ title: 'Sincronizado', icon: 'success', background: '#0a0a0a', color: '#d4af37' });
+            Swal.fire({ title: 'Sincronizado', icon: 'success', background: '#0a0a0a', color: '#d4af37', timer: 1500 });
             cargarDatosReales();
-            // Limpiar campos
             ['nom','talle','color','cos','pre','sto','cod'].forEach(id => document.getElementById(id).value = "");
         }
     }
@@ -252,7 +255,7 @@
                 totalCap += (p.precio_costo * p.stock);
                 return `<tr>
                     <td><b style="color:var(--oro)">${p.nombre}</b><br><small style="color:#888">${p.talle} | ${p.color}</small></td>
-                    <td style="text-align:center"><span class="badge-stock" style="color:${p.stock <= 2 ? '#ff4444' : '#2ecc71'}">${p.stock} U</span></td>
+                    <td style="text-align:center"><span class="badge-stock" style="color:${p.stock <= 2 ? '#ff4444' : '#2ecc71'}">${p.stock}</span></td>
                     <td style="text-align:right; font-weight:bold">$${p.precio_venta.toLocaleString()}</td>
                 </tr>`;
             }).join('');
