@@ -46,7 +46,17 @@
             background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px; padding: 30px; backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0,0,0,1);
+            position: relative;
         }
+
+        /* BOTÓN CERRAR SISTEMA */
+        .btn-close-system {
+            background: transparent; border: 1px solid var(--imperial); color: var(--imperial);
+            padding: 6px 12px; border-radius: 50px; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.55rem; letter-spacing: 2px;
+            margin-bottom: 20px; transition: 0.3s; width: fit-content;
+        }
+        .btn-close-system:hover { background: var(--imperial); color: white; box-shadow: 0 0 15px var(--imperial); }
 
         .hologram-input {
             background: rgba(255,255,255,0.03); border: 1px solid #333; color: white;
@@ -86,12 +96,14 @@
         <div class="curtain right-c">
             <h1 style="font-family:'Playfair Display'; color:var(--oro); margin-left:-110px; font-size: 3.5rem; letter-spacing: 5px;">EMPIRE</h1>
         </div>
-        <div style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:8px; font-size:0.6rem; opacity:0.6">SMART TECH OS v2.0 // ACCESS GRANTED</div>
+        <div id="click-prompt" style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:8px; font-size:0.6rem; opacity:0.6">SMART TECH OS v2.0 // ACCESS GRANTED</div>
     </div>
 
     <div id="admin-hub">
         <aside>
             <div class="panel-luxury">
+                <button class="btn-close-system" onclick="cerrarEcosistema(event)">✖ CLOSE SYSTEM</button>
+
                 <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue); margin-bottom:5px; letter-spacing:2px">CORE SCANNER ACTIVE</div>
                 <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 25px 0; font-size:1.8rem">NUEVA PRENDA</h2>
                 
@@ -157,7 +169,6 @@
     </div>
 
 <script>
-    // Configuración Supabase (Tu DB Real)
     const SB_URL = "https://svpurpvbiujhcbiugrkh.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2cHVycHZiaXVqaGNiaXVncmtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NDgzMTUsImV4cCI6MjA4MzMyNDMxNX0.AivKJ0_N0z_4T4vLNfUcE2hepJ1XXOO8-4fSA3PJXdc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
@@ -173,17 +184,30 @@
         tl.to(".left-c", { x: "-100%", duration: 2.5, ease: "power4.inOut" })
           .to(".right-c", { x: "100%", duration: 2.5, ease: "power4.inOut" }, "-=2.5")
           .set("#admin-hub", { visibility: "visible" })
-          .from("#admin-hub", { opacity: 0, y: 100, duration: 1.5, ease: "power2.out" }, "-=1")
-          .set("#intro-stage", { display: "none" });
+          .to("#admin-hub", { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }, "-=1")
+          .set("#intro-stage", { pointerEvents: "none" });
 
         cargarDatosReales();
+    }
+
+    function cerrarEcosistema(e) {
+        e.stopPropagation(); // Evita que el clic en el botón active el abrirEcosistema del body
+        const tl = gsap.timeline();
+        
+        tl.to("#admin-hub", { opacity: 0, y: 100, duration: 1, ease: "power2.in" })
+          .set("#intro-stage", { display: "flex", pointerEvents: "auto" })
+          .to(".left-c", { x: "0%", duration: 2, ease: "power4.inOut" })
+          .to(".right-c", { x: "0%", duration: 2, ease: "power4.inOut" }, "-=2")
+          .add(() => {
+              sistemaAbierto = false;
+              document.getElementById('admin-hub').style.visibility = "hidden";
+          });
     }
 
     async function procesarRegistro() {
         const nom = document.getElementById('nom').value;
         if(!nom) return Swal.fire('IDENTIDAD REQUERIDA', 'Falta el nombre de la prenda', 'warning');
 
-        // EFECTO ESCÁNER LÁSER SMART TECH
         gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 1, ease: "none", onComplete: () => {
             gsap.set("#scanner-bar", { top: "-10px" });
         }});
@@ -217,7 +241,6 @@
         const { data: productos } = await _supabase.from('productos_boutique').select('*').order('created_at', { ascending: false });
         const { data: ventas } = await _supabase.from('ventas_boutique').select('*');
 
-        // Render Tabla
         const tbody = document.getElementById('cuerpoTabla');
         let totalCap = 0;
         tbody.innerHTML = productos.map(p => {
@@ -236,7 +259,6 @@
         
         document.getElementById('capInvertido').innerText = `$${totalCap.toLocaleString()}`;
         
-        // Render Ventas Hoy
         const hoy = new Date().toISOString().split('T')[0];
         const sumaHoy = ventas.filter(v => v.created_at.startsWith(hoy)).reduce((acc, v) => acc + v.total, 0);
         document.getElementById('ventasDia').innerText = `$${sumaHoy.toLocaleString()}`;
