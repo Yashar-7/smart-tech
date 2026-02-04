@@ -14,7 +14,7 @@
         
         body { font-family: sans-serif; background: var(--negro); color: white; padding: 10px; text-align: center; margin:0; overflow-x: hidden; }
 
-        /* --- SISTEMA DE PUERTAS DE VIDRIO DE SUPERMERCADO --- */
+        /* --- SISTEMA DE PUERTAS RESPONSIVE --- */
         #gate-container {
             position: fixed; inset: 0; z-index: 9999;
             display: flex; pointer-events: none;
@@ -39,123 +39,147 @@
             justify-content: flex-end; 
             border-right: 3px solid var(--naranja);
             box-shadow: 15px 0 40px rgba(0,0,0,0.6);
-            transform: translateX(-100%); /* Empiezan abiertas para el cierre posterior */
+            transform: translateX(0%);
         }
         .gate-right { 
             justify-content: flex-start; 
             border-left: 3px solid var(--naranja);
             box-shadow: -15px 0 40px rgba(0,0,0,0.6);
-            transform: translateX(100%); /* Empiezan abiertas */
+            transform: translateX(0%);
         }
         
         .gate-logo {
-            font-size: 6rem; 
+            font-size: clamp(3rem, 15vw, 6rem); /* Tamaño fluido según pantalla */
             font-weight: 900; 
             color: var(--naranja);
             text-shadow: 0 0 15px rgba(243, 156, 18, 0.8), 0 0 40px rgba(243, 156, 18, 0.4);
             font-family: 'Arial Black', sans-serif;
-            letter-spacing: -4px;
+            letter-spacing: -2px;
             z-index: 10;
         }
 
-        .left-text { transform: translateX(2px); } 
-        .right-text { transform: translateX(-2px); }
+        /* --- CONTENEDOR PRINCIPAL RESPONSIVE --- */
+        .main-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 10px;
+        }
 
-        /* --- ESTILOS DE LA DEMO --- */
-        .card { background: #2c3e50; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: left; border: 1px solid #444; }
-        input { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: none; box-sizing: border-box; font-size: 1rem; background: white; color: black; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+        .card { 
+            background: #2c3e50; 
+            padding: clamp(15px, 5vw, 25px); 
+            border-radius: 15px; 
+            margin-bottom: 15px; 
+            text-align: left; 
+            border: 1px solid #444; 
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 8px; 
+            border: none; 
+            box-sizing: border-box; 
+            font-size: 1rem; 
+            background: white; 
+            color: black; 
+        }
+
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; font-size: 1rem; }
         .btn-scan { background: var(--amarillo); color: black; }
-        .btn-save { background: var(--verde); color: white; }
-        .btn-exit { background: transparent; color: var(--rojo); border: 2px solid var(--rojo); margin-top: 20px; transition: 0.3s; }
-        .btn-exit:hover { background: var(--rojo); color: white; }
+        .btn-save { background: var(--verde); color: white; margin-top: 15px; }
+        .btn-exit { background: transparent; color: var(--rojo); border: 2px solid var(--rojo); margin-top: 20px; transition: 0.3s; margin-bottom: 40px;}
         
-        h2, h3 { color: var(--amarillo); margin: 5px 0; }
-        .tabla-contenedor { overflow-x: auto; margin-top: 10px; background: #1a1a1a; border-radius: 10px; }
-        .tabla-inventario { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .tabla-inventario th { background: #444; color: var(--amarillo); padding: 10px; text-align: left; }
-        .tabla-inventario td { padding: 10px; border-bottom: 1px solid #333; }
-        .badge-demo { background: var(--azul); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; }
+        .tabla-contenedor { 
+            overflow-x: auto; 
+            margin-top: 10px; 
+            background: #1a1a1a; 
+            border-radius: 10px;
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+        }
+        .tabla-inventario { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 300px; }
+        .tabla-inventario th { background: #444; color: var(--amarillo); padding: 12px; text-align: left; }
+        .tabla-inventario td { padding: 12px; border-bottom: 1px solid #333; }
+
+        @media (max-width: 480px) {
+            h2 { font-size: 1.5rem; }
+            .gate-logo { letter-spacing: -1px; }
+        }
     </style>
 </head>
 <body>
 
     <div id="gate-container">
         <div class="gate-panel gate-left">
-            <span class="gate-logo left-text">HO</span>
+            <span class="gate-logo">HO</span>
         </div>
         <div class="gate-panel gate-right">
-            <span class="gate-logo right-text">NEY</span>
+            <span class="gate-logo">NEY</span>
         </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span class="badge-demo">MODO DEMOSTRACIÓN</span>
-    </div>
-
-    <h2>🍯 Demo Gestión Almacén</h2>
-    <p style="font-size: 0.8rem; color: #aaa;">Esta es una versión de prueba. Los datos son públicos.</p>
-    
-    <div id="reader" style="width: 100%; border-radius: 15px; overflow: hidden; border: 2px solid var(--amarillo); margin-bottom:10px;"></div>
-    <button class="btn btn-scan" onclick="iniciarEscaneo()">📷 PROBAR ESCÁNER</button>
-
-    <div class="card">
-        <h3>📦 Editor (Prueba Guardar)</h3>
-        <input type="text" id="cod" placeholder="Código de barras">
-        <input type="text" id="nom" placeholder="Nombre del producto">
-        <input type="number" id="pre" placeholder="Precio Venta $">
-        <input type="number" id="sto" placeholder="Stock">
-        <button class="btn btn-save" onclick="guardarProducto()">💾 GUARDAR CAMBIOS</button>
-    </div>
-
-    <div class="card">
-        <h3>📋 Lista de Mercadería</h3>
-        <div class="tabla-contenedor">
-            <table class="tabla-inventario">
-                <thead>
-                    <tr><th>Producto</th><th>Venta</th><th>Stock</th></tr>
-                </thead>
-                <tbody id="cuerpo-tabla"></tbody>
-            </table>
+    <div class="main-wrapper">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span class="badge-demo" style="background: var(--azul); color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold;">MODO DEMOSTRACIÓN</span>
         </div>
-    </div>
 
-    <button class="btn btn-exit" onclick="cerrarSistema()">🔴 SALIR DEL SISTEMA</button>
+        <h2>🍯 Gestión Almacén Honey</h2>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">Versión optimizada para Smart Tech 2026.</p>
+        
+        <div id="reader" style="width: 100%; border-radius: 15px; overflow: hidden; border: 2px solid var(--amarillo); margin-bottom:10px; background: #000;"></div>
+        <button class="btn btn-scan" onclick="iniciarEscaneo()">📷 INICIAR ESCÁNER</button>
+
+        <div class="card">
+            <h3>📦 Editor de Producto</h3>
+            <input type="text" id="cod" placeholder="Código de barras">
+            <input type="text" id="nom" placeholder="Nombre del producto">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="number" id="pre" placeholder="Precio $">
+                <input type="number" id="sto" placeholder="Stock">
+            </div>
+            <button class="btn btn-save" onclick="guardarProducto()">💾 GUARDAR EN NUBE</button>
+        </div>
+
+        <div class="card">
+            <h3>📋 Inventario Real</h3>
+            <div class="tabla-contenedor">
+                <table class="tabla-inventario">
+                    <thead>
+                        <tr><th>Producto</th><th>Venta</th><th>Stock</th></tr>
+                    </thead>
+                    <tbody id="cuerpo-tabla"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <button class="btn btn-exit" onclick="cerrarSistema()">🔴 SALIR DEL SISTEMA</button>
+    </div>
 
 <script>
-    // --- LÓGICA DE APERTURA (Al entrar) ---
+    // --- LÓGICA DE APERTURA ---
     window.addEventListener('load', () => {
         const tl = gsap.timeline();
-        // Ponemos las puertas en el centro primero para que se vea la animación de apertura
-        gsap.set(".gate-left, .gate-right", { x: "0%" });
+        tl.to(".gate-left", { x: "-100%", duration: 1.8, ease: "expo.inOut" }, "+=0.5")
+          .to(".gate-right", { x: "100%", duration: 1.8, ease: "expo.inOut" }, "<")
+          .set("#gate-container", { display: "none" });
         
-        tl.to(".gate-left", { x: "-100%", duration: 2, ease: "expo.inOut" }, "+=0.8")
-          .to(".gate-right", { x: "100%", duration: 2, ease: "expo.inOut" }, "<")
-          .to("#gate-container", { display: "none" });
+        cargarListaMercaderia();
     });
 
-    // --- LÓGICA DE CIERRE (Al salir) ---
+    // --- LÓGICA DE CIERRE ---
     function cerrarSistema() {
-        const tl = gsap.timeline();
-        
-        // Hacemos visible el contenedor de nuevo
-        document.getElementById("gate-container").style.display = "flex";
-        
-        tl.to(".gate-left", { x: "0%", duration: 1.5, ease: "expo.inOut" })
-          .to(".gate-right", { x: "0%", duration: 1.5, ease: "expo.inOut" }, "<")
-          .call(() => {
-              // Redirigir al index después de cerrar (cambia 'index.html' por tu ruta real)
-              window.location.href = "index.html"; 
-          });
+        gsap.set("#gate-container", { display: "flex" });
+        gsap.timeline()
+            .to(".gate-left", { x: "0%", duration: 1.2, ease: "expo.inOut" })
+            .to(".gate-right", { x: "0%", duration: 1.2, ease: "expo.inOut" }, "<")
+            .call(() => { window.location.href = "index.html"; });
     }
 
-    // --- LÓGICA DE DATOS ---
     const SB_URL = "https://svpurpvbiujhcbiugrkh.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2cHVycHZiaXVqaGNiaXVncmtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3NDgzMTUsImV4cCI6MjA4MzMyNDMxNX0.AivKJ0_N0z_4T4vLNfUcE2hepJ1XXOO8-4fSA3PJXdc";
     const _supabase = supabase.createClient(SB_URL, SB_KEY);
     
-    window.onload = () => { cargarListaMercaderia(); };
-
     async function cargarListaMercaderia() {
         const { data } = await _supabase.from('productos_demo').select('*').order('nombre', { ascending: true });
         let html = "";
@@ -169,10 +193,10 @@
 
     function iniciarEscaneo() {
         const scanner = new Html5Qrcode("reader");
-        scanner.start({ facingMode: "environment" }, { fps: 15, qrbox: 250 }, (codigo) => {
+        scanner.start({ facingMode: "environment" }, { fps: 15, qrbox: {width: 250, height: 150} }, (codigo) => {
             document.getElementById('cod').value = codigo;
             scanner.stop();
-        }).catch(err => console.error(err));
+        }).catch(err => alert("Error cámara: " + err));
     }
 
     async function guardarProducto() {
@@ -181,13 +205,15 @@
         const pre = document.getElementById('pre').value;
         const sto = document.getElementById('sto').value;
         
+        if(!nom || !pre) return alert("Completa Nombre y Precio");
+
         const { error } = await _supabase.from('productos_demo').upsert({
             codigo_barras: cod || "D-" + Math.floor(Math.random()*1000),
             nombre: nom, precio: parseFloat(pre), stock: parseInt(sto) || 0
         });
 
         if(!error) {
-            alert("✅ Guardado");
+            alert("✅ Sincronizado");
             cargarListaMercaderia();
         }
     }
