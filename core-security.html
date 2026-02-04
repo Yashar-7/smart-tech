@@ -73,6 +73,11 @@
             80% { transform: translate(2px, -2px); }
             100% { transform: translate(0); }
         }
+
+        /* Custom scrollbar para el log */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #000; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--dark-green); border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-10">
@@ -149,6 +154,10 @@
                             <span class="text-yellow-400">BUSY</span>
                         </li>
                         <li class="flex items-center justify-between">
+                            <span>GESTION_HONEY</span>
+                            <span class="text-pink-400">MONITORING</span>
+                        </li>
+                        <li class="flex items-center justify-between">
                             <span>DATABASE_CORE</span>
                             <span class="text-green-500">SYNCED</span>
                         </li>
@@ -210,6 +219,7 @@
         const messages = [
             "Conectando a nodo central de Smart Tech...",
             "Inyectando paquetes de prueba en Fashion_Empire...",
+            "Sincronizando flujos de Gestión Honey...",
             "Escaneando vulnerabilidades en Barber_Access...",
             "Puertos 80, 443 monitoreados por Neural Firewall.",
             "Buscando backdoors... NO DETECTADOS.",
@@ -232,17 +242,58 @@
                 document.getElementById('timestamp').innerText = new Date().toLocaleString();
                 document.getElementById('key-gen').innerText = btoa(Math.random()).substring(0, 32);
                 
-                // Variar amenaza aleatoriamente
                 const threat = Math.floor(Math.random() * 30);
                 document.getElementById('threat-bar').style.width = threat + '%';
             }, 1800);
         }
 
+        // --- TERMINATE SESSION: PROTOCOLO DE CIERRE MILITAR ---
         function terminateSession() {
-            gsap.to("body", { opacity: 0, scale: 0.9, duration: 1, onComplete: () => {
-                alert("CONEXIÓN CERRADA. SISTEMA EN STANDBY.");
-                window.location.reload(); 
-            }});
+            // Crear overlay de cierre
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; inset: 0; background: #000; z-index: 20000;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                font-family: 'Fira Code', monospace; color: #ff0000; text-align: center;
+            `;
+            overlay.innerHTML = `
+                <div id="shutdown-msg" style="font-size: 1.2rem; text-shadow: 0 0 10px red; font-weight: bold;">[ CRITICAL_SHUTDOWN_INITIATED ]</div>
+                <div id="progress-log" style="font-size: 0.7rem; margin-top: 25px; color: #880000; line-height: 1.5;"></div>
+            `;
+            document.body.appendChild(overlay);
+
+            const logBox = document.getElementById('progress-log');
+            const steps = [
+                "Terminando procesos de auditoría...",
+                "Desconectando nodos de Gestión Honey...",
+                "Cerrando túneles de Fashion Empire...",
+                "Purgando caché de Smart Barber...",
+                "MEMORIA VOLÁTIL BORRADA.",
+                "SISTEMA FUERA DE LÍNEA."
+            ];
+
+            const tl = gsap.timeline();
+
+            // Efecto de colapso visual
+            tl.to("#main-content", { duration: 0.2, opacity: 0, scaleY: 0.005, ease: "power4.in" })
+              .to(overlay, { background: "#080000", duration: 0.1 });
+
+            // Mostrar pasos de purga
+            steps.forEach((step, i) => {
+                tl.add(() => {
+                    const p = document.createElement('p');
+                    p.innerText = `> ${step}`;
+                    logBox.appendChild(p);
+                }, `+=${i * 0.35}`);
+            });
+
+            // Fundido final y reload
+            tl.to(overlay, { 
+                opacity: 0, 
+                duration: 1.2, 
+                delay: 0.8, 
+                onComplete: () => { window.location.reload(); } 
+            });
         }
     </script>
 </body>
