@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartBarber Pro - 8K Cinematic OS</title>
+    <title>SmartBarber Pro | Smart Tech</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
@@ -37,7 +37,6 @@
             padding: 20px; text-align: center;
         }
 
-        /* --- LOGO ADAPTABLE --- */
         .neon-box {
             padding: 15px 20px; border-radius: 12px;
             background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 242, 255, 0.2);
@@ -58,7 +57,6 @@
             margin-bottom: 15px;
         }
 
-        /* --- DASHBOARD --- */
         #main-wrapper { 
             opacity: 0; width: 100%; max-width: 800px; margin: 0 auto;
             padding: 10px; display: flex; flex-direction: column; align-items: center;
@@ -72,7 +70,6 @@
             border-radius: 15px; padding: 1rem; width: 100%; box-sizing: border-box; margin-bottom: 12px;
         }
 
-        /* Estadísticas Optimizadas */
         .grid-stats { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -87,7 +84,6 @@
         .stat-val { font-size: 1rem; font-weight: bold; color: #fff; margin-top: 4px; }
         .stat-card div:first-child { font-size: 0.6rem; text-transform: uppercase; color: #888; letter-spacing: 1px; }
 
-        /* Formulario Móvil */
         .form-gestion { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 
         input, select { 
@@ -161,7 +157,7 @@
             </div>
         </div>
         
-        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid rgba(244,67,54,0.3); padding: 12px; border-radius: 50px; cursor: pointer; margin-top: 10px; width: auto; min-width: 180px; font-size: 0.65rem;">🔴 CERRAR JORNADA</button>
+        <button onclick="cerrarLocal()" style="background: transparent; color: var(--rojo); border: 1px solid rgba(244,67,54,0.3); padding: 12px; border-radius: 50px; cursor: pointer; margin-top: 10px; width: auto; min-width: 180px; font-size: 0.65rem; margin-bottom: 30px;">🔴 CERRAR JORNADA</button>
     </div>
 
 <script>
@@ -235,9 +231,24 @@
         document.getElementById('res-c').innerHTML = `<b>Comisiones Actuales:</b><br>JULIÁN: $${db.barberos["JULIÁN"]}<br>MARCOS: $${db.barberos["MARCOS"]}`;
     }
 
+    // --- FUNCIÓN DE CIERRE ACTUALIZADA ---
     function cerrarLocal() {
+        // Hacemos visible el contenedor de la persiana
         document.getElementById("shutter-container").style.display = "flex";
-        gsap.fromTo("#shutter", { y: "-100%" }, { y: "0%", duration: 1.2, ease: "power2.in" });
+        
+        // Animamos la persiana bajando
+        gsap.fromTo("#shutter", 
+            { y: "-100%" }, 
+            { 
+                y: "0%", 
+                duration: 1.2, 
+                ease: "power2.in",
+                onComplete: () => {
+                    // Una vez cerrada, redirigimos al menú principal de Smart Tech
+                    window.location.href = "index.html";
+                }
+            }
+        );
     }
 
     setInterval(() => { 
