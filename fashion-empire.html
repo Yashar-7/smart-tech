@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fashion Empire OS | Smart Tech Management</title>
+    <title>Fashion Empire OS | Smart Tech</title>
     
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -60,7 +60,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box;
         }
 
-        /* --- INPUTS RESPONSIVOS --- */
         .hologram-input {
             background: rgba(255,255,255,0.03); border: 1px solid #333; color: white;
             padding: 12px; margin-bottom: 10px; width: 100%; box-sizing: border-box;
@@ -76,10 +75,9 @@
             font-size: 0.8rem; margin-top: 10px;
         }
 
-        /* --- STATS GRID --- */
         .stats-container {
             display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+            grid-template-columns: repeat(2, 1fr); 
             gap: 10px; margin-bottom: 15px;
         }
         
@@ -90,7 +88,6 @@
         .stat-card { text-align: center; border-top: 2px solid var(--oro); padding: 12px; }
         .stat-val { font-size: 1.1rem; font-weight: 700; font-family: 'Orbitron'; margin-top: 5px; }
 
-        /* --- TABLA RESPONSIVA --- */
         .table-container { 
             max-height: 400px; overflow-y: auto; margin-top: 15px;
             width: 100%;
@@ -168,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="panel-luxury">
+            <div class="panel-luxury" style="margin-bottom: 30px;">
                 <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:1px; font-size: 1.1rem;">INVENTARIO</h3>
                 <div class="table-container">
                     <table id="tablaEmpire">
@@ -206,8 +203,10 @@
         cargarDatosReales();
     }
 
+    // --- FUNCIÓN DE CIERRE ACTUALIZADA ---
     function cerrarEcosistema(e) {
         if(e) e.stopPropagation(); 
+        
         const tl = gsap.timeline();
         tl.to("#admin-hub", { opacity: 0, y: 20, duration: 0.4 })
           .set("#intro-stage", { pointerEvents: "auto" })
@@ -215,8 +214,8 @@
           .to(".right-c", { x: "0%", duration: 1.2, ease: "power3.inOut" }, "-=1.2")
           .to(".giant-label", { opacity: 1, duration: 0.6 }, "-=0.4")
           .add(() => {
-              sistemaAbierto = false;
-              document.getElementById('admin-hub').style.visibility = "hidden";
+              // Redirección al index principal al terminar la animación
+              window.location.href = "index.html";
           });
     }
 
