@@ -31,13 +31,21 @@
 
         /* --- THEATER INTRO --- */
         #intro-stage { position: fixed; inset: 0; z-index: 9999; display: flex; cursor: pointer; }
-        .curtain { flex: 1; height: 100%; background: linear-gradient(to bottom, #30060a, var(--imperial)); box-shadow: inset 0 0 100px #000; display: flex; align-items: center; transition: 0.5s; }
+        .curtain { flex: 1; height: 100%; background: linear-gradient(to bottom, #30060a, var(--imperial)); box-shadow: inset 0 0 100px #000; display: flex; align-items: center; position: relative; overflow: hidden; }
         .left-c { justify-content: flex-end; border-right: 1px solid var(--oro); }
         .right-c { justify-content: flex-start; border-left: 1px solid var(--oro); }
 
+        /* Estilo para las letras gigantes que se deben desvanecer */
+        .giant-label {
+            font-family: 'Playfair Display'; color: var(--oro); font-size: 3.5rem; letter-spacing: 5px;
+            position: absolute; pointer-events: none; white-space: nowrap;
+        }
+        .left-c .giant-label { right: -110px; }
+        .right-c .giant-label { left: -110px; }
+
         /* --- MAIN INTERFACE --- */
         #admin-hub {
-            position: relative; z-index: 1; padding: 25px; visibility: hidden;
+            position: relative; z-index: 10; padding: 25px; visibility: hidden; opacity: 0;
             max-width: 1600px; margin: auto; display: grid;
             grid-template-columns: 400px 1fr; gap: 30px;
         }
@@ -46,17 +54,17 @@
             background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 20px; padding: 30px; backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0,0,0,1);
-            position: relative;
         }
 
-        /* BOTÓN CERRAR SISTEMA */
+        /* BOTÓN CERRAR SISTEMA MEJORADO */
         .btn-close-system {
-            background: transparent; border: 1px solid var(--imperial); color: var(--imperial);
-            padding: 6px 12px; border-radius: 50px; cursor: pointer;
-            font-family: 'Orbitron'; font-size: 0.55rem; letter-spacing: 2px;
-            margin-bottom: 20px; transition: 0.3s; width: fit-content;
+            background: rgba(99, 13, 22, 0.2); border: 1px solid var(--imperial); color: #ff4d4d;
+            padding: 8px 15px; border-radius: 5px; cursor: pointer;
+            font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2px;
+            margin-bottom: 25px; transition: 0.3s; width: 100%; text-align: center;
+            display: block; box-shadow: 0 0 10px rgba(99, 13, 22, 0.5);
         }
-        .btn-close-system:hover { background: var(--imperial); color: white; box-shadow: 0 0 15px var(--imperial); }
+        .btn-close-system:hover { background: var(--imperial); color: white; box-shadow: 0 0 20px var(--imperial); }
 
         .hologram-input {
             background: rgba(255,255,255,0.03); border: 1px solid #333; color: white;
@@ -91,18 +99,18 @@
 
     <div id="intro-stage">
         <div class="curtain left-c">
-            <h1 style="font-family:'Playfair Display'; color:var(--oro); margin-right:-110px; font-size: 3.5rem; letter-spacing: 5px;">FASHION</h1>
+            <h1 class="giant-label">FASHION</h1>
         </div>
         <div class="curtain right-c">
-            <h1 style="font-family:'Playfair Display'; color:var(--oro); margin-left:-110px; font-size: 3.5rem; letter-spacing: 5px;">EMPIRE</h1>
+            <h1 class="giant-label">EMPIRE</h1>
         </div>
-        <div id="click-prompt" style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:8px; font-size:0.6rem; opacity:0.6">SMART TECH OS v2.0 // ACCESS GRANTED</div>
+        <div id="click-prompt" style="position:absolute; bottom:15%; width:100%; text-align:center; font-family:'Orbitron'; color:var(--oro); letter-spacing:8px; font-size:0.6rem; opacity:0.6; z-index: 10000;">SMART TECH OS v2.0 // ACCESS GRANTED</div>
     </div>
 
     <div id="admin-hub">
         <aside>
             <div class="panel-luxury">
-                <button class="btn-close-system" onclick="cerrarEcosistema(event)">✖ CLOSE SYSTEM</button>
+                <button class="btn-close-system" onclick="cerrarEcosistema(event)">TERMINAR SESIÓN / CERRAR</button>
 
                 <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--neon-blue); margin-bottom:5px; letter-spacing:2px">CORE SCANNER ACTIVE</div>
                 <h2 style="font-family:'Playfair Display'; color:var(--oro); margin:0 0 25px 0; font-size:1.8rem">NUEVA PRENDA</h2>
@@ -181,23 +189,28 @@
         sistemaAbierto = true;
 
         const tl = gsap.timeline();
-        tl.to(".left-c", { x: "-100%", duration: 2.5, ease: "power4.inOut" })
-          .to(".right-c", { x: "100%", duration: 2.5, ease: "power4.inOut" }, "-=2.5")
+        // Las cortinas se abren y las letras se desvanecen
+        tl.to(".giant-label", { opacity: 0, duration: 0.5 })
+          .to(".left-c", { x: "-100%", duration: 2, ease: "power4.inOut" }, "-=0.2")
+          .to(".right-c", { x: "100%", duration: 2, ease: "power4.inOut" }, "-=2")
+          .to("#click-prompt", { opacity: 0, duration: 0.5 }, "-=2")
           .set("#admin-hub", { visibility: "visible" })
-          .to("#admin-hub", { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }, "-=1")
+          .to("#admin-hub", { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "-=1")
           .set("#intro-stage", { pointerEvents: "none" });
 
         cargarDatosReales();
     }
 
     function cerrarEcosistema(e) {
-        e.stopPropagation(); // Evita que el clic en el botón active el abrirEcosistema del body
+        if(e) e.stopPropagation(); 
         const tl = gsap.timeline();
         
-        tl.to("#admin-hub", { opacity: 0, y: 100, duration: 1, ease: "power2.in" })
+        tl.to("#admin-hub", { opacity: 0, y: 50, duration: 0.8, ease: "power2.in" })
           .set("#intro-stage", { display: "flex", pointerEvents: "auto" })
           .to(".left-c", { x: "0%", duration: 2, ease: "power4.inOut" })
           .to(".right-c", { x: "0%", duration: 2, ease: "power4.inOut" }, "-=2")
+          .to(".giant-label", { opacity: 1, duration: 1 }, "-=1")
+          .to("#click-prompt", { opacity: 0.6, duration: 1 }, "-=1")
           .add(() => {
               sistemaAbierto = false;
               document.getElementById('admin-hub').style.visibility = "hidden";
