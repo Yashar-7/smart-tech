@@ -6,58 +6,160 @@
     <title>CORE Security | Neural Firewall</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&display=swap');
-        body { background: #000; color: #00ff41; font-family: 'Fira Code', monospace; overflow: hidden; }
-        .scanline {
-            width: 100%; height: 2px; background: rgba(0, 255, 65, 0.1);
-            position: absolute; top: 0; animation: scan 4s linear infinite;
+        
+        :root { --matrix-green: #00ff41; --dark-green: #003b00; }
+        
+        body { 
+            background: #000; 
+            color: var(--matrix-green); 
+            font-family: 'Fira Code', monospace; 
+            overflow: hidden;
+            height: 100vh;
         }
-        @keyframes scan { from { top: 0; } to { top: 100%; } }
-        .matrix-text { text-shadow: 0 0 10px #00ff41; }
-        .terminal-box { border: 1px solid #00ff41; background: rgba(0, 20, 0, 0.9); box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); }
+
+        /* --- EFECTO DE FONDO MATRIX --- */
+        #matrix-canvas {
+            position: fixed; top: 0; left: 0; z-index: 0; opacity: 0.15;
+        }
+
+        .scanline {
+            width: 100%; height: 4px; background: rgba(0, 255, 65, 0.1);
+            position: absolute; top: 0; animation: scan 3s linear infinite;
+            z-index: 100; pointer-events: none;
+        }
+        @keyframes scan { from { top: -10%; } to { top: 110%; } }
+
+        .terminal-box { 
+            border: 1px solid var(--matrix-green); 
+            background: rgba(0, 10, 0, 0.85); 
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        /* --- INTRO SCANNER --- */
+        #auth-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .retina-scanner {
+            width: 200px; height: 200px; border: 2px solid var(--matrix-green);
+            border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; box-shadow: 0 0 30px var(--dark-green);
+        }
+
+        .laser {
+            width: 100%; height: 2px; background: var(--matrix-green);
+            position: absolute; box-shadow: 0 0 15px var(--matrix-green);
+            animation: laser-move 2s ease-in-out infinite;
+        }
+        @keyframes laser-move { 0%, 100% { top: 10%; } 50% { top: 90%; } }
+
+        #main-content { opacity: 0; visibility: hidden; z-index: 10; position: relative; }
+
+        .glitch-hover:hover {
+            text-shadow: 2px 0 red, -2px 0 blue;
+            animation: glitch 0.3s infinite;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
     </style>
 </head>
 <body class="p-4 md:p-10">
+    <canvas id="matrix-canvas"></canvas>
     <div class="scanline"></div>
+
+    <div id="auth-overlay">
+        <div class="retina-scanner mb-6">
+            <div class="laser"></div>
+            <i data-lucide="fingerprint" class="w-24 h-24 opacity-50"></i>
+        </div>
+        <p class="text-xs tracking-[0.5em] animate-pulse mb-8">WAITING_FOR_BIOMETRIC_DATA...</p>
+        <button onclick="startAuth()" class="px-8 py-3 border border-[#00ff41] hover:bg-[#00ff41] hover:text-black transition-all font-bold tracking-widest">
+            INICIAR ESCANEO
+        </button>
+    </div>
     
-    <div class="max-w-5xl mx-auto">
+    <div id="main-content" class="max-w-6xl mx-auto">
         <header class="flex justify-between items-center mb-8 border-b border-[#00ff41] pb-4">
             <div class="flex items-center gap-4">
-                <i data-lucide="shield-alert" class="w-8 h-8 animate-pulse"></i>
-                <h1 class="text-2xl font-bold tracking-tighter uppercase">Core_Security_V.2.0</h1>
+                <div class="relative">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-[#00ff41]"></i>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tighter uppercase glitch-hover">Core_Security_OS</h1>
+                    <p class="text-[10px] opacity-50">LOCATION: 10.0.0.1 // ENCRYPTED_CHANNEL</p>
+                </div>
             </div>
-            <button onclick="window.close()" class="px-4 py-1 border border-[#00ff41] text-xs hover:bg-[#00ff41] hover:text-black transition-all">TERMINATE_SESSION</button>
+            <button onclick="terminateSession()" class="px-4 py-1 border border-red-900 text-red-500 text-xs hover:bg-red-500 hover:text-black transition-all font-bold">
+                [ TERMINATE_SESSION ]
+            </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="terminal-box p-6 md:col-span-2 h-[400px] overflow-hidden relative">
-                <div class="flex justify-between mb-4 text-[10px] opacity-70">
-                    <span>SYSTEM_SCAN_STATUS: ACTIVE</span>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="terminal-box p-6 md:col-span-3 h-[500px] flex flex-col">
+                <div class="flex justify-between mb-4 text-[10px] border-b border-green-900 pb-2">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-3 h-3"></i> 
+                        LIVE_AUDIT_LOG
+                    </span>
                     <span id="timestamp"></span>
                 </div>
-                <div id="log" class="text-xs space-y-1">
-                    <p>> INICIALIZANDO PROTOCOLO DE AUDITORÍA...</p>
+                <div id="log" class="text-[11px] space-y-1 overflow-y-auto flex-1 custom-scrollbar">
+                    <p class="text-white">> PROTOCOLO DE AUDITORÍA INICIALIZADO...</p>
+                    <p class="text-white">> CARGANDO NÚCLEO NEURAL... OK</p>
                 </div>
             </div>
 
             <div class="space-y-6">
                 <div class="terminal-box p-4">
-                    <p class="text-[10px] uppercase mb-4 opacity-50">Nivel de Amenaza</p>
-                    <div class="w-full bg-gray-900 h-4 rounded-full overflow-hidden border border-[#00ff41]">
-                        <div class="bg-[#00ff41] h-full" style="width: 15%"></div>
+                    <p class="text-[10px] uppercase mb-4 opacity-50 flex items-center justify-between">
+                        Amenaza 
+                        <i data-lucide="activity" class="w-3 h-3"></i>
+                    </p>
+                    <div class="w-full bg-black h-2 border border-green-900 mb-2">
+                        <div id="threat-bar" class="bg-red-600 h-full shadow-[0_0_10px_red]" style="width: 15%"></div>
                     </div>
-                    <p class="text-right text-[10px] mt-1 italic">CRITICAL_LEVEL: LOW</p>
+                    <p class="text-right text-[10px] italic" id="threat-text">STATUS: STABLE</p>
                 </div>
 
                 <div class="terminal-box p-4">
-                    <p class="text-[10px] uppercase mb-4 opacity-50">Módulos Activos</p>
-                    <ul class="text-[10px] space-y-2">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3"></i> AES-256 ENCRYPTION</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3"></i> BRUTE_FORCE_PROTECTION</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3"></i> NEURAL_FIREWALL</li>
-                        <li class="flex items-center gap-2 text-yellow-500"><i data-lucide="loader" class="w-3 h-3 animate-spin"></i> SQL_INJECTION_SCAN</li>
+                    <p class="text-[10px] uppercase mb-4 opacity-50">Módulos_Smart_Tech</p>
+                    <ul class="text-[10px] space-y-3">
+                        <li class="flex items-center justify-between">
+                            <span>SMART_BARBER</span>
+                            <span class="text-blue-400">ONLINE</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span>FASHION_EMPIRE</span>
+                            <span class="text-yellow-400">BUSY</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span>DATABASE_CORE</span>
+                            <span class="text-green-500">SYNCED</span>
+                        </li>
                     </ul>
+                </div>
+
+                <div class="terminal-box p-4 flex flex-col items-center justify-center border-dashed">
+                    <div class="text-[10px] opacity-50 mb-2">ENCRYPTION_KEY</div>
+                    <div class="text-[9px] break-all text-center opacity-80" id="key-gen">
+                        0x8823...A12
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,27 +167,83 @@
 
     <script>
         lucide.createIcons();
+
+        // --- MATRIX BACKGROUND EFFECT ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^";
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ff41";
+            ctx.font = fontSize + "px monospace";
+            for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // --- AUTH ANIMATION ---
+        function startAuth() {
+            const tl = gsap.timeline();
+            tl.to("#auth-overlay button", { opacity: 0, y: 20, duration: 0.5 })
+              .to(".retina-scanner", { scale: 1.2, boxShadow: "0 0 50px #00ff41", duration: 1 })
+              .to("#auth-overlay", { opacity: 0, duration: 1, ease: "power4.in" })
+              .set("#auth-overlay", { display: "none" })
+              .set("#main-content", { visibility: "visible" })
+              .to("#main-content", { opacity: 1, y: 0, duration: 1 });
+            
+            initLog();
+        }
+
+        // --- LOG LOGIC ---
         const log = document.getElementById('log');
         const messages = [
-            "Conectando a nodo central...",
-            "Inyectando paquetes de prueba...",
-            "Vulnerabilidad XSS no detectada.",
-            "Puertos 80, 443 monitoreados.",
-            "Buscando backdoors...",
-            "Encriptación de base de datos OK.",
-            "Acceso denegado desde IP: 192.168.1.105",
+            "Conectando a nodo central de Smart Tech...",
+            "Inyectando paquetes de prueba en Fashion_Empire...",
+            "Escaneando vulnerabilidades en Barber_Access...",
+            "Puertos 80, 443 monitoreados por Neural Firewall.",
+            "Buscando backdoors... NO DETECTADOS.",
+            "Encriptación AES-256 activa en Base de Datos.",
+            "Intento de acceso denegado desde IP: 185.23.102.1",
             "Firewall bloqueó 4 peticiones sospechosas.",
-            "Optimizando respuesta del servidor...",
-            "Escaneo de núcleo finalizado."
+            "Optimizando respuesta del servidor central...",
+            "Módulo de Seguridad V.2.0 operando sin errores."
         ];
 
-        setInterval(() => {
-            const p = document.createElement('p');
-            p.innerText = `> ${messages[Math.floor(Math.random() * messages.length)]}`;
-            log.appendChild(p);
-            if (log.childNodes.length > 20) log.removeChild(log.firstChild);
-            document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
-        }, 1500);
+        function initLog() {
+            setInterval(() => {
+                const p = document.createElement('p');
+                const time = new Date().toLocaleTimeString().split(' ')[0];
+                p.innerHTML = `<span style="opacity:0.4">[${time}]</span> > ${messages[Math.floor(Math.random() * messages.length)]}`;
+                log.appendChild(p);
+                if (log.childNodes.length > 25) log.removeChild(log.firstChild);
+                log.scrollTop = log.scrollHeight;
+                
+                document.getElementById('timestamp').innerText = new Date().toLocaleString();
+                document.getElementById('key-gen').innerText = btoa(Math.random()).substring(0, 32);
+                
+                // Variar amenaza aleatoriamente
+                const threat = Math.floor(Math.random() * 30);
+                document.getElementById('threat-bar').style.width = threat + '%';
+            }, 1800);
+        }
+
+        function terminateSession() {
+            gsap.to("body", { opacity: 0, scale: 0.9, duration: 1, onComplete: () => {
+                alert("CONEXIÓN CERRADA. SISTEMA EN STANDBY.");
+                window.location.reload(); 
+            }});
+        }
     </script>
 </body>
 </html>
