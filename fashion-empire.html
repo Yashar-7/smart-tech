@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fashion Empire OS | Smart Tech</title>
+    <title>Fashion Empire OS | Smart Tech Management</title>
     
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="panel-luxury" style="margin-bottom: 30px;">
+            <div class="panel-luxury">
                 <h3 style="font-family:'Playfair Display'; color:var(--oro); margin:0; letter-spacing:1px; font-size: 1.1rem;">INVENTARIO</h3>
                 <div class="table-container">
                     <table id="tablaEmpire">
@@ -203,10 +203,8 @@
         cargarDatosReales();
     }
 
-    // --- FUNCIÓN DE CIERRE ACTUALIZADA ---
     function cerrarEcosistema(e) {
         if(e) e.stopPropagation(); 
-        
         const tl = gsap.timeline();
         tl.to("#admin-hub", { opacity: 0, y: 20, duration: 0.4 })
           .set("#intro-stage", { pointerEvents: "auto" })
@@ -214,17 +212,18 @@
           .to(".right-c", { x: "0%", duration: 1.2, ease: "power3.inOut" }, "-=1.2")
           .to(".giant-label", { opacity: 1, duration: 0.6 }, "-=0.4")
           .add(() => {
-              // Redirección al index principal al terminar la animación
+              sistemaAbierto = false;
+              document.getElementById('admin-hub').style.visibility = "hidden";
+              // AGREGADO: Redirección al index después de cerrar cortinas
               window.location.href = "index.html";
           });
     }
 
+    // ... resto de tus funciones de Supabase (idénticas a tu original) ...
     async function procesarRegistro() {
         const nom = document.getElementById('nom').value;
         if(!nom) return Swal.fire('Error', 'Nombre requerido', 'warning');
-
         gsap.fromTo("#scanner-bar", { top: "0%" }, { top: "100%", duration: 0.8 });
-
         const datos = {
             nombre: nom,
             talle: document.getElementById('talle').value,
@@ -234,7 +233,6 @@
             stock: parseInt(document.getElementById('sto').value) || 0,
             codigo_barras: document.getElementById('cod').value || "SKU-" + Date.now()
         };
-
         const { error } = await _supabase.from('productos_boutique').upsert(datos);
         if(!error) {
             Swal.fire({ title: 'Sincronizado', icon: 'success', background: '#0a0a0a', color: '#d4af37', timer: 1500 });
@@ -246,7 +244,6 @@
     async function cargarDatosReales() {
         const { data: productos } = await _supabase.from('productos_boutique').select('*').order('created_at', { ascending: false });
         const { data: ventas } = await _supabase.from('ventas_boutique').select('*');
-
         const tbody = document.getElementById('cuerpoTabla');
         let totalCap = 0;
         if(productos) {
@@ -259,7 +256,6 @@
                 </tr>`;
             }).join('');
         }
-        
         document.getElementById('capInvertido').innerText = `$${totalCap.toLocaleString()}`;
         const hoy = new Date().toISOString().split('T')[0];
         const sumaHoy = ventas ? ventas.filter(v => v.created_at.startsWith(hoy)).reduce((acc, v) => acc + v.total, 0) : 0;
